@@ -8,6 +8,10 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Embeds variables in the message body
  * Supports SMS + Whatsapp
  * Supports Twilio Messaging Services as senders
+ * Edit/Delete data directly on the browser
+ * Logs
+ * View Message statuses
+ * Get Updated Message statuses to understand the final state of messages
 
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
@@ -27,3 +31,7 @@ cd CSV-to-SMS
 twilio serverless:deploy
 # View your app at https://[my-runtime-url].twil.io/index.html
 ```
+
+## Credits
+This repository is built upon the following:
+https://github.com/r-lego/CSV-to-SMS
