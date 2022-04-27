@@ -16,7 +16,9 @@ Easily set up and send out messaging campaigns using your Twilio account.
 
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
-2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started):
+2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
+
+**Ensure your CSV has one column named "Numbers" with the users phone numbers to message**
 
 ## Setup
 
