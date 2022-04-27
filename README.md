@@ -1,11 +1,12 @@
 # Outbound Messaging App
+
 Easily set up and send out messaging campaigns using your Twilio account.
 
-![Application screenshot](https://user-images.githubusercontent.com/2404879/160084852-95b796f5-fa2b-4ce2-a5cb-ef9023258db2.png)
+![Application screenshot](https://user-images.githubusercontent.com/54394422/165508349-b0958eed-9f1e-4b49-be5d-68eeec2915ad.png)
 
 ## Key features
- * Loading data from a CSV file
- * Embeds variables in the message body
+ * Load data from a CSV file
+ * Embed variables in the message body
  * Supports SMS + Whatsapp
  * Supports Twilio Messaging Services as senders
  * Edit/Delete data directly on the browser
@@ -21,16 +22,31 @@ Easily set up and send out messaging campaigns using your Twilio account.
 
 3. Clone the repository and `cd` into it:
 ```shell
-git clone https://github.com/r-lego/CSV-to-SMS.git
+https://github.com/evanTheTerribleWarrior/Twilio-Outbound-Messaging.git
 
-cd CSV-to-SMS
+cd Twilio-Outbound-Messaging
 ```
 
-4. Using Twilio CLI, deploy code to your Twilio account:
+4. Create .env file and set the password:
+```shell
+cp .env.example .env
+```
+
+5. Using Twilio CLI, deploy code to your Twilio account:
 ```shell
 twilio serverless:deploy
 # View your app at https://[my-runtime-url].twil.io/index.html
 ```
+
+## Examples
+
+1. Load your data in a CSV that will auto generate the relevant columns. Review any rows with empty Numbers value
+
+2. Click "Check Numbers" (including the Password you have set) to view any numbers with wrong structure, for example too many or too few digits
+![Check Numbers](https://user-images.githubusercontent.com/54394422/165508332-2bfa1915-067b-4d7e-857d-1c3e33a76547.png)
+
+3. Once errors are fixed, you can click "Send Numbers" and monitor the progress of your messages
+![Send Messages](https://user-images.githubusercontent.com/54394422/165508345-90c4e9c4-9437-44a2-a542-2239cb8bb101.png)
 
 ## Credits
 This repository is built upon the following:
