@@ -11,10 +11,18 @@ exports.handler = function(context, event, callback) {
     const twilioClient = context.getTwilioClient();
     
     const response = new Twilio.Response();
-    response.appendHeader('Access-Control-Allow-Origin', '*');
     response.appendHeader('Content-Type', 'application/json');
+
+    const headerCheckPath = Runtime.getFunctions()['check-headers'].path;
+    const headerCheck = require(headerCheckPath);
   
     try {
+
+      if(headerCheck.checkHeader(event.request.headers.origin, "https://" + context.DOMAIN_NAME)){
+        response.setStatusCode(401);
+        response.setBody({accessError: "You can't access this endpoint"});
+        callback(null, response);
+      }
 
       if (event.password !== context.PASSWORD){
         response.setStatusCode(401);
