@@ -10,6 +10,7 @@ exports.handler = async function(context, event, callback) {
 
 	try {
 
+    console.log(event.request.headers)
     if(headerCheck.checkHeader(event.request.headers.origin, "https://" + context.DOMAIN_NAME)){
         response.setStatusCode(401);
         response.setBody({accessError: "You can't access this endpoint"});
