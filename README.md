@@ -61,7 +61,8 @@ A sample .csv is included that you can load and play around. It has certain elem
 
 ## Considerations
 
-This repo currently does not have enhanced security, other than the password for the requests. A good password practice is important
+- Enhancements could be done on the user validation side (e.g. with JWT tokens).
+- Ensure the password used to allow the requests is not easily guessable
 
 ## Credits
 This repository is built upon the following:
