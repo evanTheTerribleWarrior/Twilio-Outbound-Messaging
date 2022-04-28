@@ -59,6 +59,10 @@ Note: You can also use Advanced Lookup ("Check Carrier Type") to look for non-mo
 
 A sample .csv is included that you can load and play around. It has certain elements like malformed numbers, empty number fields etc in order for you to check and validate the app behaviour
 
+## Considerations
+
+This repo currently does not have enhanced security, other than the password for the requests. A good password practice is important
+
 ## Credits
 This repository is built upon the following:
 https://github.com/r-lego/CSV-to-SMS
