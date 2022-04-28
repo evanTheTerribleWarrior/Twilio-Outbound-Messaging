@@ -46,8 +46,11 @@ twilio serverless:deploy
 
 1. Load your data in a CSV that will auto generate the relevant columns. Review any rows with empty Numbers value
 
-2. Click "Check Numbers" (including the Password you have set) to view any numbers with wrong structure, for example too many or too few digits
+2. Click "Check Numbers" to view any numbers with wrong structure, for example too many or too few digits
 ![Check Numbers](https://user-images.githubusercontent.com/54394422/165508332-2bfa1915-067b-4d7e-857d-1c3e33a76547.png)
+
+It is mandatory to fix errors found here, either by removing or editing the row containing the number.
+Note: You can also use Advanced Lookup to look for non-mobile numbers (e.g. landline). Although it is not mandatory to fix these errors to send the messages, we strongly suggest you clean up as much as possible the set of numbers before sending
 
 3. Once errors are fixed, you can click "Send Numbers" and monitor the progress of your messages
 ![Send Messages](https://user-images.githubusercontent.com/54394422/165508345-90c4e9c4-9437-44a2-a542-2239cb8bb101.png)
