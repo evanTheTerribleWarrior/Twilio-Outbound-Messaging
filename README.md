@@ -50,6 +50,10 @@ twilio serverless:deploy
 3. Once errors are fixed, you can click "Send Numbers" and monitor the progress of your messages
 ![Send Messages](https://user-images.githubusercontent.com/54394422/165508345-90c4e9c4-9437-44a2-a542-2239cb8bb101.png)
 
+## Test It!
+
+A sample .csv is included that you can load and play around. It has certain elements like malformed numbers, empty number fields etc in order for you to check and validate the app behaviour
+
 ## Credits
 This repository is built upon the following:
 https://github.com/r-lego/CSV-to-SMS
