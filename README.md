@@ -16,6 +16,11 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * View Message statuses
  * Get Updated Message statuses to understand the final state of messages
 
+
+** UPCOMING CHANGES **
+- Adding Auth layer with JWT
+- Adding Whatsapp template retrieval
+
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
