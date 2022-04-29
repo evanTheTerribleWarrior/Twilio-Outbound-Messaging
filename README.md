@@ -17,7 +17,7 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Get Updated Message statuses to understand the final state of messages
 
 
-** UPCOMING CHANGES **
+**UPCOMING CHANGES**
 - Adding Auth layer with JWT
 - Adding Whatsapp template retrieval
 
