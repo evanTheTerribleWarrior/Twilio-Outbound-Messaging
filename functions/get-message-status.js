@@ -6,17 +6,23 @@ exports.handler = function(context, event, callback) {
 
   response.appendHeader('Content-Type', 'application/json');
 
-  const headerCheckPath = Runtime.getFunctions()['check-headers'].path;
-  const headerCheck = require(headerCheckPath);
+  const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
+  const checkAuth = require(checkAuthPath)
 
+  let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
+  if(!check.allowed){
+    response
+    .setBody('Unauthorized')
+    .setStatusCode(401)
+    .appendHeader(
+      'WWW-Authenticate',
+      'Bearer realm="Access to the app"'
+    );
+    return callback(null,response);
+  }
 
 	try {
 
-    if(headerCheck.checkHeader(event.request.headers.origin, "https://" + context.DOMAIN_NAME)){
-        response.setStatusCode(401);
-        response.setBody({accessError: "You can't access this endpoint"});
-        callback(null, response);
-      }
 
 		let myPromises = [];
 

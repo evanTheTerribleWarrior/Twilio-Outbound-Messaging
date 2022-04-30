@@ -1,22 +1,27 @@
 exports.handler = async function(context, event, callback) {
 
-	const twilioClient = context.getTwilioClient();
+	
 	const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  const headerCheckPath = Runtime.getFunctions()['check-headers'].path;
-  const headerCheck = require(headerCheckPath);
 
-	let services_array = [];
+	const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
+  const checkAuth = require(checkAuthPath)
+
+  let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
+  if(!check.allowed){
+    response
+    .setBody('Unauthorized')
+    .setStatusCode(401)
+    .appendHeader(
+      'WWW-Authenticate',
+      'Bearer realm="Access to the app"'
+    );
+    return callback(null,response);
+  }
 
 	try {
-
-    console.log(event.request.headers)
-    if(headerCheck.checkHeader(event.request.headers.origin, "https://" + context.DOMAIN_NAME)){
-        response.setStatusCode(401);
-        response.setBody({accessError: "You can't access this endpoint"});
-        callback(null, response);
-      }
-
+    const twilioClient = context.getTwilioClient();
+    let services_array = [];
 		let services = await twilioClient.messaging.services.list()
         services.forEach(s => {
 
