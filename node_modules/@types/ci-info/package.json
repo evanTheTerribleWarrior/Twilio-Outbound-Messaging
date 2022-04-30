@@ -1,0 +1,13 @@
+{
+    "name": "@types/ci-info",
+    "version": "3.1.0",
+    "typings": null,
+    "description": "Stub TypeScript definitions entry for ci-info, which provides its own types definitions",
+    "main": "",
+    "scripts": {},
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "ci-info": "*"
+    }
+}

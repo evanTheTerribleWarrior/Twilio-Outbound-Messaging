@@ -18,7 +18,7 @@ exports.handler = (context, event, callback) => {
 
   const token = jwt.sign(
     {
-      sub: username,
+      sub: 'MessagingApp',
       iss: 'twil.io',
       org: 'twilio',
       perms: ['read'],
