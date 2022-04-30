@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 exports.handler = (context, event, callback) => {
 
   const { username, password } = event;
-  console.log(event)
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -27,7 +26,6 @@ exports.handler = (context, event, callback) => {
     { expiresIn: '1d' }
   );
 
-  console.log(token)
   response.setBody({success: true, token: token});
 
   return callback(null, response);
