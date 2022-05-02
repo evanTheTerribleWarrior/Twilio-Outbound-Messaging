@@ -30,7 +30,7 @@ Note: The API to load Whatsapp Templates will be deprecated approx H2 2023 in fa
 
 3. Clone the repository and `cd` into it:
 ```shell
-https://github.com/evanTheTerribleWarrior/Twilio-Outbound-Messaging.git
+git clone https://github.com/evanTheTerribleWarrior/Twilio-Outbound-Messaging.git
 
 cd Twilio-Outbound-Messaging
 ```
