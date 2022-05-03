@@ -67,7 +67,7 @@ A sample .csv is included that you can load and play around. It has certain elem
 
 ## Considerations
 
-- As above, ensure the secret used to allow the requests and the credentials are not easily guessable
+- Currently, large datasets might not work properly. You can enhance the functions, but also my plan is to enhance future versions to work better with lots of data.
 
 ## Credits
 This repository is built upon the following:
