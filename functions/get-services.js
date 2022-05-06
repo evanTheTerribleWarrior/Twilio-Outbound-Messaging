@@ -32,7 +32,6 @@ exports.handler = async function(context, event, callback) {
         		}
         	)
         });
-        console.log(services_array)
         response.setBody({
             status: true,
             message: "Getting Services done",

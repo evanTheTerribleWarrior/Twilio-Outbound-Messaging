@@ -23,6 +23,8 @@ exports.handler = function(context, event, callback) {
 
       const twilioClient = context.getTwilioClient();
 
+      console.log(`Array before sending ${JSON.stringify(event.sendResultsArray)}`)
+
       sentSuccess = 0;
       sentErrors = 0;
       let errorObj = {};
@@ -37,7 +39,9 @@ exports.handler = function(context, event, callback) {
         let msgTemplate = event.textmsg;
         let results = event.csvData;
 
-        let myPromises = [];
+        let start = event.start
+
+        let promises = [];
 
         let senderId;
         if (!event.isMsgService){
@@ -51,7 +55,7 @@ exports.handler = function(context, event, callback) {
 
           if(event.sendResultsArray[index]["status"] === "delivered"){
             console.log(`Position ${index}: Already delivered`);
-            myPromises.push({})
+            promises.push({})
             return;
           }
           
@@ -68,20 +72,15 @@ exports.handler = function(context, event, callback) {
           payload["body"] = body.toString();
           if (!event.isMsgService) payload["from"] = senderId.toString()
           else payload["messagingServiceSid"] = senderId.toString()
-
-          console.log(payload)
   
-          myPromises.push(
+          promises.push(
             twilioClient.messages.create(payload)
           );
 
-  
-          console.log("SENDING --- FROM : " + senderId + " -- TO : " + to + " -- BODY : " + body);
         });
   
-        Promise.allSettled(myPromises).then((result) => {
+        Promise.allSettled(promises).then((result) => {
           result.forEach((r,index) => {
-            console.log(r)
             if (r.status === "fulfilled"){
               
               if (event.sendResultsArray[index]["status"] !== "delivered")
@@ -94,7 +93,7 @@ exports.handler = function(context, event, callback) {
                 event.sendResultsArray[index]["error"] = errorObj
                 event.sendResultsArray[index]["status"] = r.value.status
               }   
-                      
+              
               
             } 
             else { 
@@ -113,8 +112,6 @@ exports.handler = function(context, event, callback) {
             }
 
           });
-
-          console.log(`Array after Sending: ${JSON.stringify(event.sendResultsArray)}`)
   
           response.setBody({
             status: true,

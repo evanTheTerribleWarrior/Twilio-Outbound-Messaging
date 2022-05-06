@@ -11,7 +11,8 @@
     "@twilio/runtime-handler": "1.2.2",
     "axios": "^0.27.2",
     "jsonwebtoken": "^8.5.1",
-    "twilio": "^3.56"
+    "twilio": "^3.56",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "twilio-run": "^3.4.1"

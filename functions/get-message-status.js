@@ -24,49 +24,46 @@ exports.handler = function(context, event, callback) {
 	try {
 
 
-		let myPromises = [];
+		let promises = [];
 
 		event.sendResultsArray.forEach(m =>  {
 
       if(m.sid !== "")
-			myPromises.push(
+			promises.push(
         twilioClient.messages(m.sid).fetch()
       );
       else{
-        myPromises.push("")
+        promises.push("")
       }
 					
 		})
 
-		Promise.allSettled(myPromises).then((result) => {
-          result.forEach((r,index) => {
-            console.log(r)   
-            let status_obj = {}       
-            if(myPromises[index] === "")return;
-            if (r.status === "fulfilled") {
-				    event.sendResultsArray[index]["status"] = r.value.status
-        		event.sendResultsArray[index]["error"]["errorMessage"] = r.value.errorMessage
-        		event.sendResultsArray[index]["error"]["errorCode"] = r.value.errorCode
-            if(!r.value.errorMessage)event.sendResultsArray[index]["error"]["errorLink"]=""
-			      }
-            else if (r.status === "rejected"){
-            event.sendResultsArray[index]["status"] = r.reason.status
-            event.sendResultsArray[index]["error"]["errorLink"] = r.reason.moreInfo
-            event.sendResultsArray[index]["error"]["errorCode"] = r.reason.code
-            }
-			
-          })
-          
+		Promise.allSettled(promises).then((result) => {
+      result.forEach((r,index) => {
+        let status_obj = {}       
+        if(promises[index] === "")return;
+        if (r.status === "fulfilled") {
+          event.sendResultsArray[index]["status"] = r.value.status
+          event.sendResultsArray[index]["error"]["errorMessage"] = r.value.errorMessage
+          event.sendResultsArray[index]["error"]["errorCode"] = r.value.errorCode
+          if(!r.value.errorMessage)event.sendResultsArray[index]["error"]["errorLink"]=""
+        }
+        else if (r.status === "rejected"){
+          event.sendResultsArray[index]["status"] = r.reason.status
+          event.sendResultsArray[index]["error"]["errorLink"] = r.reason.moreInfo
+          event.sendResultsArray[index]["error"]["errorCode"] = r.reason.code
+        }
   
-        	console.log(`After statuses check: ${JSON.stringify(event.sendResultsArray)}`)
-        	response.setBody({
-            status: true,
-            message: "Getting Statuses done",
-            data: {
-              sendResultsArray: event.sendResultsArray
-            },
-          })
-          callback(null, response);
+      })
+      
+      response.setBody({
+        status: true,
+        message: "Getting Statuses done",
+        data: {
+          sendResultsArray: event.sendResultsArray
+        },
+      })
+      callback(null, response);
        });
     } catch (err) {
       console.log("error:" + err);

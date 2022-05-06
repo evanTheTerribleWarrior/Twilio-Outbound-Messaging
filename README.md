@@ -10,7 +10,8 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Supports SMS + Whatsapp
  * Supports Twilio Messaging Services as senders
  * Load your Whatsapp templates directly
- * Edit/Delete data directly on the browser
+ * Add/Edit/Delete data directly on the browser
+ * Pagination that allows to load large amount of data
  * Lookup integration to filter out/fix malformed numbers
  * Enhanced Lookup to check for non-mobile numbers (to avoid sending unnecessary SMS)
  * Logs to understand errors
