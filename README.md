@@ -68,7 +68,9 @@ A sample .csv is included that you can load and play around. It has certain elem
 
 ## Considerations
 
-- Currently, large datasets might not work properly. You can enhance the functions, but also my plan is to enhance future versions to work better with lots of data.
+- This is not an official Twilio repository.
+- Currently there is no process that saves any data on your twilio account, other than creating logs. Which means if you restart the browser, the current progress disappears. So this repository as it stands is for one-off campaigns/sending
+- As this is a personal work, updates will be published at non-standard intervals. You are of course free to take the code and shape as you wish
 
 ## Credits
 This repository is built upon the following:
