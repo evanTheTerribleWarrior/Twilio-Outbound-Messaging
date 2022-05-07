@@ -2,7 +2,7 @@
 
 Easily set up and send out messaging campaigns using your Twilio account.
 
-![Application screenshot](https://user-images.githubusercontent.com/54394422/166103466-af5322a3-8b6d-4cb1-8547-cbff3944bd4e.png)
+![Application screenshot](https://user-images.githubusercontent.com/54394422/167253128-b64c7f09-a5b3-4fad-a3e9-b6ad3fa822b6.png)
 
 ## Key features
  * Load data from a CSV file
@@ -51,17 +51,18 @@ twilio serverless:deploy
 ## Example
 
 1. First you need to authenticate. Make sure your .env contains strong Username/Password/Secret
+![Authenticate](https://user-images.githubusercontent.com/54394422/167253609-c6776b61-3439-4a00-a484-8f4c7d3205d7.png)
 
 2. Load your data in a CSV that will auto generate the relevant columns. Review any rows with empty Numbers value
 
 3. Click "Check Numbers" to view any numbers with wrong structure, for example too many or too few digits
-![Check Numbers](https://user-images.githubusercontent.com/54394422/166103472-9bceb7e9-e218-4898-800d-3240777989ad.png)
+![Check Numbers](https://user-images.githubusercontent.com/54394422/167253613-636acfa1-9a42-4743-aace-7e76a24fb740.png)
 
 It is mandatory to fix errors found here, either by removing or editing the row containing the number.
 Note: You can also use Advanced Lookup ("Check Carrier Type") to look for non-mobile numbers (e.g. landline). Although it is not mandatory to fix these errors to send the messages, we strongly suggest you clean up as much as possible the set of numbers before sending
 
 4. Once errors are fixed, you can click "Send Numbers" and monitor the progress of your messages
-![Send Messages](https://user-images.githubusercontent.com/54394422/166103473-85a9ca7b-eb8f-4769-8717-01b9f29704b1.png)
+![Send Messages](https://user-images.githubusercontent.com/54394422/167253614-44ee6dcb-3f1e-4c57-9303-bec270c08893.png)
 
 5. After the messages are sent, you can use "Get Status" button to see how your messages change status over time (until they reach a final status). You can visualise this by viewing the basic graphs provided - Total Message statuses and Total Errors
 ![Graphs](https://user-images.githubusercontent.com/54394422/167253128-b64c7f09-a5b3-4fad-a3e9-b6ad3fa822b6.png)
