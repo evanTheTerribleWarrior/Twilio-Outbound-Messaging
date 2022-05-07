@@ -14,8 +14,7 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Pagination that allows to load large amount of data
  * Lookup integration to filter out/fix malformed numbers
  * Enhanced Lookup to check for non-mobile numbers (to avoid sending unnecessary SMS)
- * Logs to understand errors
- * View Message statuses
+ * Logs
  * Basic Graphs for visualising the total message statuses and errors
  * Get Updated Message statuses to understand the final state of messages
  * JWT authentication
