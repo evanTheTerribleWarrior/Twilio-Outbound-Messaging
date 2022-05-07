@@ -16,6 +16,7 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Enhanced Lookup to check for non-mobile numbers (to avoid sending unnecessary SMS)
  * Logs to understand errors
  * View Message statuses
+ * Basic Graphs for visualising the total message statuses and errors
  * Get Updated Message statuses to understand the final state of messages
  * JWT authentication
 
@@ -61,6 +62,9 @@ Note: You can also use Advanced Lookup ("Check Carrier Type") to look for non-mo
 
 4. Once errors are fixed, you can click "Send Numbers" and monitor the progress of your messages
 ![Send Messages](https://user-images.githubusercontent.com/54394422/166103473-85a9ca7b-eb8f-4769-8717-01b9f29704b1.png)
+
+5. After the messages are sent, you can use "Get Status" button to see how your messages change status over time (until they reach a final status). You can visualise this by viewing the basic graphs provided - Total Message statuses and Total Errors
+![Graphs](https://user-images.githubusercontent.com/54394422/167253128-b64c7f09-a5b3-4fad-a3e9-b6ad3fa822b6.png)
 
 ## Test It!
 
