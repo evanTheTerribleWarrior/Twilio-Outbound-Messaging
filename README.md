@@ -2,7 +2,7 @@
 
 Easily set up and send out messaging campaigns using your Twilio account.
 
-![Application screenshot](https://user-images.githubusercontent.com/54394422/167253128-b64c7f09-a5b3-4fad-a3e9-b6ad3fa822b6.png)
+![Application screenshot](https://user-images.githubusercontent.com/54394422/167257651-1da0ffc6-fcbe-466e-8277-51d35f922378.png)
 
 ## Key features
  * Load data from a CSV file
@@ -65,7 +65,7 @@ Note: You can also use Advanced Lookup ("Check Carrier Type") to look for non-mo
 ![Send Messages](https://user-images.githubusercontent.com/54394422/167253614-44ee6dcb-3f1e-4c57-9303-bec270c08893.png)
 
 5. After the messages are sent, you can use "Get Status" button to see how your messages change status over time (until they reach a final status). You can visualise this by viewing the basic graphs provided - Total Message statuses and Total Errors
-![Graphs](https://user-images.githubusercontent.com/54394422/167253128-b64c7f09-a5b3-4fad-a3e9-b6ad3fa822b6.png)
+![Graphs](https://user-images.githubusercontent.com/54394422/167257651-1da0ffc6-fcbe-466e-8277-51d35f922378.png)
 
 ## Test It!
 
