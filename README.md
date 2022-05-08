@@ -18,8 +18,11 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Basic Graphs for visualising the total message statuses and errors
  * Get Updated Message statuses to understand the final state of messages
  * JWT authentication
+ * Exponential Backoff for error 429 "Too Many Requests"
 
 Note: The API to load Whatsapp Templates will be deprecated approx H2 2023 in favour of the newer Content API
+
+Note 2: Exponential Backoff settings currently are based on personal tests of loading about 10,000 numbers. I would advise that you do your own tests and realise the performance in order to adjust the settings. I have left this item on the TODO list to keep revising it.
 
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
@@ -78,7 +81,7 @@ A sample .csv is included that you can load and play around. It has certain elem
 
 ## TODO
 
-- Exponential Backoff 
+- Exponential Backoff more testing
 - Better promises rejection handling
 
 ## Credits
