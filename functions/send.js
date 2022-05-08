@@ -1,4 +1,3 @@
-
 exports.handler = function(context, event, callback) {
     
     const response = new Twilio.Response();
@@ -50,11 +49,12 @@ exports.handler = function(context, event, callback) {
         else {
           senderId = event.sender
         }
-  
+        
+        
+
         results.forEach((msg,index) => {
 
           if(event.sendResultsArray[index]["status"] === "delivered"){
-            console.log(`Position ${index}: Already delivered`);
             promises.push({})
             return;
           }
@@ -73,14 +73,17 @@ exports.handler = function(context, event, callback) {
           if (!event.isMsgService) payload["from"] = senderId.toString()
           else payload["messagingServiceSid"] = senderId.toString()
   
+          const expbackoffPath = Runtime.getFunctions()['exponential-backoff'].path;
+          const expbackoff = require(expbackoffPath)
           promises.push(
-            twilioClient.messages.create(payload)
+            expbackoff.expbackoff(async () => {return twilioClient.messages.create(payload)})   
           );
 
         });
   
         Promise.allSettled(promises).then((result) => {
           result.forEach((r,index) => {
+            
             if (r.status === "fulfilled"){
               
               if (event.sendResultsArray[index]["status"] !== "delivered")
@@ -97,6 +100,7 @@ exports.handler = function(context, event, callback) {
               
             } 
             else { 
+              console.log(`Promise ${index} rejected with reason ${JSON.stringify(r.reason)}`)
               sentErrors++;
               errorObj = {}
               errorObj["errorCode"] = r.reason.code;

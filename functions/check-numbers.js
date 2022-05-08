@@ -34,50 +34,55 @@ exports.handler = async function(context, event, callback) {
         throw("csvData can not be empty");
       } else {  
 
-      let promises = []
+        
+        const expbackoffPath = Runtime.getFunctions()['exponential-backoff'].path;
+        const expbackoff = require(expbackoffPath)
+        
+        let promises = []
 
-      csvData.forEach((msg) => {
-        promises.push(
-          twilioClient.lookups.v1.phoneNumbers(msg.Number)
-          .fetch(carrierSwitch ? {type: ['carrier']} : "")
-        );
-      })
-
-      console.log(promises.length)
-
-      Promise.allSettled(promises).then((result) => {
-        result.forEach((r,index) => {
-          if (r.status === "rejected") {
-            if (r.reason.status === 404) {
-              invalidNumbers_ID.push(start + index)
-              invalidNumbers.push(csvData[index].UniqueID)
-              return;
-            }            
-          }
-          else if (r.status === "fulfilled") {
-            sentSuccess++
-            if (carrierSwitch){
-              if (r.value.carrier.type !== 'mobile') {
-                nonmobileNumbers_ID.push(start + index)
-                nonmobileNumbers.push(csvData[index].UniqueID)
-              }
-
-            }
-          }
-        });    
-        response.setBody({
-          status: true,
-          message: "Lookup done",
-          data: {
-            checkedSuccess: sentSuccess,
-            nonmobileNumbers: nonmobileNumbers,
-            invalidNumbers: invalidNumbers,
-            nonmobileNumbers_ID: nonmobileNumbers_ID,
-            invalidNumbers_ID: invalidNumbers_ID
-          },
+        csvData.forEach((msg) => {
+          promises.push(
+            expbackoff.expbackoff(async () => {return twilioClient.lookups.v1.phoneNumbers(msg.Number)
+            .fetch(carrierSwitch ? {type: ['carrier']} : "")})
+          );
         })
-        callback(null, response);   
-      })
+
+        console.log(promises.length)
+
+        Promise.allSettled(promises).then((result) => {
+          result.forEach((r,index) => {
+            console.log(r)
+            if (r.status === "rejected") {
+              if (r.reason.status === 404) {
+                invalidNumbers_ID.push(start + index)
+                invalidNumbers.push(csvData[index].UniqueID)
+                return;
+              }            
+            }
+            else if (r.status === "fulfilled") {
+              sentSuccess++
+              if (carrierSwitch){
+                if (r.value.carrier.type !== 'mobile') {
+                  nonmobileNumbers_ID.push(start + index)
+                  nonmobileNumbers.push(csvData[index].UniqueID)
+                }
+
+              }
+            }
+          });    
+          response.setBody({
+            status: true,
+            message: "Lookup done",
+            data: {
+              checkedSuccess: sentSuccess,
+              nonmobileNumbers: nonmobileNumbers,
+              invalidNumbers: invalidNumbers,
+              nonmobileNumbers_ID: nonmobileNumbers_ID,
+              invalidNumbers_ID: invalidNumbers_ID
+            },
+          })
+          callback(null, response);   
+        })
     }
     }
     catch (err) {

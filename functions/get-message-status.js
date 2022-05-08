@@ -25,12 +25,14 @@ exports.handler = function(context, event, callback) {
 
 
 		let promises = [];
+    const expbackoffPath = Runtime.getFunctions()['exponential-backoff'].path;
+    const expbackoff = require(expbackoffPath)
 
 		event.sendResultsArray.forEach(m =>  {
 
       if(m.sid !== "")
 			promises.push(
-        twilioClient.messages(m.sid).fetch()
+        expbackoff.expbackoff(async () => {return twilioClient.messages(m.sid).fetch()})
       );
       else{
         promises.push("")
@@ -49,7 +51,7 @@ exports.handler = function(context, event, callback) {
           if(!r.value.errorMessage)event.sendResultsArray[index]["error"]["errorLink"]=""
         }
         else if (r.status === "rejected"){
-          event.sendResultsArray[index]["status"] = r.reason.status
+          event.sendResultsArray[index]["status"] = "failed"
           event.sendResultsArray[index]["error"]["errorLink"] = r.reason.moreInfo
           event.sendResultsArray[index]["error"]["errorCode"] = r.reason.code
         }
