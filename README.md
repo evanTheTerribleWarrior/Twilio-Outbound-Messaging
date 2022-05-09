@@ -83,6 +83,7 @@ A sample .csv is included that you can load and play around. It has certain elem
 
 - Exponential Backoff more testing
 - Better promises rejection handling
+- A version using Twilio Sync for persistent queueing
 
 ## Credits
 This repository is built upon the following:
