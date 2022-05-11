@@ -62,7 +62,7 @@ exports.handler = function(context, event, callback) {
   
           let body = msgTemplate;
           Object.keys(msg).forEach((k) => {
-            body = body.replace("[" + k + "]", msg[k]);
+            body = body.replace("{{" + k + "}}", msg[k]);
           });
 
           let to = (event.channel === "Whatsapp") ? "whatsapp:" + msg.Number : msg.Number
