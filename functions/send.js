@@ -72,6 +72,7 @@ exports.handler = function(context, event, callback) {
           payload["body"] = body.toString();
           if (!event.isMsgService) payload["from"] = senderId.toString()
           else payload["messagingServiceSid"] = senderId.toString()
+          if(event.mediaURL)payload["mediaUrl"] = [event.mediaURL];
   
           const expbackoffPath = Runtime.getFunctions()['exponential-backoff'].path;
           const expbackoff = require(expbackoffPath)

@@ -8,6 +8,7 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Load data from a CSV file
  * Embed variables in the message body
  * Supports SMS + Whatsapp
+ * Supports Media (Whatsapp Media + MMS)
  * Supports Twilio Messaging Services as senders
  * Load your Whatsapp templates directly
  * Add/Edit/Delete/Search data directly on the browser
