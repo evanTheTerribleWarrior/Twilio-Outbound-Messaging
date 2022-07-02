@@ -29,7 +29,7 @@ Note 2: Exponential Backoff settings currently are based on personal tests of lo
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
 
-**Ensure your CSV has one column named "Number" with the users phone numbers to message**
+**Ensure you select the correct column that contains the Phone Numbers from the relevant dropdown**
 
 ## Setup
 
