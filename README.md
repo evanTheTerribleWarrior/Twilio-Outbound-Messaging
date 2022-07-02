@@ -29,8 +29,6 @@ Note 2: Exponential Backoff settings currently are based on personal tests of lo
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
 
-**Ensure you select the correct column that contains the Phone Numbers from the relevant dropdown**
-
 ## Setup
 
 3. Clone the repository and `cd` into it:
@@ -50,6 +48,7 @@ cp .env.example .env
 twilio serverless:deploy
 # View your app at https://[my-runtime-url].twil.io/index.html
 ```
+**Ensure you select the correct column name that contains the Phone Numbers from the relevant dropdown**
 
 ## Example
 
