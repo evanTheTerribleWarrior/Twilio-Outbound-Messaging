@@ -28,7 +28,7 @@ exports.handler = async function(context, event, callback) {
 
       const twilioClient = context.getTwilioClient();
 
-      let {csvData, carrierSwitch, start} = event
+      let {csvData, carrierSwitch, start, selectedPhoneNumberColumn} = event
       
       if (typeof event.csvData === 'undefined' || event.csvData === null || event.csvData.length === 0) {
         throw("csvData can not be empty");
@@ -42,7 +42,7 @@ exports.handler = async function(context, event, callback) {
 
         csvData.forEach((msg) => {
           promises.push(
-            expbackoff.expbackoff(async () => {return twilioClient.lookups.v1.phoneNumbers(msg.Number)
+            expbackoff.expbackoff(async () => {return twilioClient.lookups.v1.phoneNumbers(msg[selectedPhoneNumberColumn])
             .fetch(carrierSwitch ? {type: ['carrier']} : "")})
           );
         })

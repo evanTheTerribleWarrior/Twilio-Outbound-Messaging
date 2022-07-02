@@ -40,6 +40,8 @@ exports.handler = function(context, event, callback) {
 
         let start = event.start
 
+        let selectedPhoneNumberColumn = event.selectedPhoneNumberColumn
+
         let promises = [];
 
         let senderId;
@@ -65,7 +67,7 @@ exports.handler = function(context, event, callback) {
             body = body.replace("{{" + k + "}}", msg[k]);
           });
 
-          let to = (event.channel === "Whatsapp") ? "whatsapp:" + msg.Number : msg.Number
+          let to = (event.channel === "Whatsapp") ? "whatsapp:" + msg[selectedPhoneNumberColumn] : msg[selectedPhoneNumberColumn]
 
           let payload = {}
           payload["to"] = to.toString();
@@ -84,7 +86,7 @@ exports.handler = function(context, event, callback) {
   
         Promise.allSettled(promises).then((result) => {
           result.forEach((r,index) => {
-            
+            console.log(r)
             if (r.status === "fulfilled"){
               
               if (event.sendResultsArray[index]["status"] !== "delivered")
