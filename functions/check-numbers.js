@@ -1,5 +1,7 @@
 exports.handler = async function(context, event, callback) {
 
+    const hasTwilioOptOut = false;
+
     const response = new Twilio.Response();
     response.appendHeader('Content-Type', 'application/json');
     

@@ -52,20 +52,42 @@ exports.handler = function(context, event, callback) {
           senderId = event.sender
         }
         
-        
+        console.log(JSON.stringify(event.optOutNumbers))
 
         results.forEach((msg,index) => {
+
+          console.log(`Comparing with ${msg[selectedPhoneNumberColumn]}`)
 
           if(event.sendResultsArray[index]["status"] === "delivered"){
             promises.push({})
             return;
+          }
+
+          let found;
+          if(event.optOutNumbers.length > 0){
+            found = event.optOutNumbers.findIndex((number) => {
+              if (!msg[selectedPhoneNumberColumn].startsWith('+')){
+                return number === '+' + msg[selectedPhoneNumberColumn]
+              }
+              return number === msg[selectedPhoneNumberColumn] 
+            })
+            if(found > -1){
+              console.log(`${event.optOutNumbers[found]} has opted out, ignore...`)
+              promises.push({})
+              return;
+            }
           }
           
   
           let body = msgTemplate;
           Object.keys(msg).forEach((k) => {
             body = body.replace("{{" + k + "}}", msg[k]);
+            
           });
+
+          if(event.optOutSwitch){
+            body += "\nSTOP: https://" + context.DOMAIN_NAME + "/o?" + base10_to_base64(msg[selectedPhoneNumberColumn])
+          }
 
           let to = (event.channel === "Whatsapp") ? "whatsapp:" + msg[selectedPhoneNumberColumn] : msg[selectedPhoneNumberColumn]
 
@@ -143,3 +165,17 @@ exports.handler = function(context, event, callback) {
     
    
   };
+
+  //number encoding
+  function base10_to_base64(num) {
+    var order = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
+    var base = order.length;
+    var str = "", r;
+    while (num) {
+        r = num % base
+        num -= r;
+        num /= base;
+        str = order.charAt(r) + str;
+    }
+    return str;
+}
