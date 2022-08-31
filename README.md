@@ -20,6 +20,7 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * Get Updated Message statuses to understand the final state of messages
  * JWT authentication
  * Exponential Backoff for error 429 "Too Many Requests"
+ * Optionally get an Opt-Out URL from Twilio that will be added to the message automatically (the main domain created when you deploy the app)
 
 Note: The API to load Whatsapp Templates will be deprecated approx H2 2023 in favour of the newer Content API
 
