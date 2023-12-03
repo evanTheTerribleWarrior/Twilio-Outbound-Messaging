@@ -1,0 +1,19 @@
+CampaignTable:
+- When I go to the last page, if I go back to another page it breaks
+- Check for duplicates
+
+Check and Send:
+- Add "Sending/Checking please wait" message
+- Handle error in promises
+
+Logs:
+- Update logs for all the use cases
+- Separate error logs in Lookup that was not 404 for the number to give feedback
+
+Generic:
+- Add progress bar?
+- Allow local files to be added as Media URL?
+- Preview Media URL?
+
+Future:
+- Add FBM and GBM?

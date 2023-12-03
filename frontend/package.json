@@ -1,0 +1,45 @@
+{
+  "name": "create-react-app",
+  "version": "5.0.0",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "start-https": "sudo PORT=443 HTTPS=true react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "@mui/icons-material": "^5.6.1",
+    "@mui/material": "latest",
+    "@mui/x-data-grid": "^5.10.0",
+    "@reduxjs/toolkit": "^1.9.7",
+    "@webscopeio/react-textarea-autocomplete": "^4.9.1",
+    "date-fns": "^2.30.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-json-to-table": "^0.1.7",
+    "react-papaparse": "^4.0.2",
+    "react-redux": "^8.1.3",
+    "react-router-dom": "^6.20.0",
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.1.9",
+    "ts-react-json-table": "^0.1.2",
+    "uuid": "^8.3.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:3102/"
+}
