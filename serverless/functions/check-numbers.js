@@ -1,26 +1,14 @@
 exports.handler = async function(context, event, callback) {
 
-    const hasTwilioOptOut = false;
-
     const response = new Twilio.Response();
     response.appendHeader('Content-Type', 'application/json');
     
     const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
     const checkAuth = require(checkAuthPath)
+    let check = checkAuth.checkAuth(event.request.cookies, context.JWT_SECRET);
+    if(!check.allowed)return callback(null,check.response);
 
-    let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
-    if(!check.allowed){
-      response
-      .setBody('Unauthorized')
-      .setStatusCode(401)
-      .appendHeader(
-        'WWW-Authenticate',
-        'Bearer realm="Access to the app"'
-      );
-      return callback(null,response);
-    }
-
-      try{
+      try {
       sentSuccess = 0;
       formatErrors = 0;
       nonmobileNumbers = [];
@@ -29,10 +17,10 @@ exports.handler = async function(context, event, callback) {
       invalidNumbers_ID = [];
 
       const twilioClient = context.getTwilioClient();
-
-      let {csvData, carrierSwitch, start, selectedPhoneNumberColumn} = event
-      
-      if (typeof event.csvData === 'undefined' || event.csvData === null || event.csvData.length === 0) {
+      console.log(event);
+        
+      const {csvData, phoneNumberColumn, startIndex, checkLineType} = event
+      if (typeof csvData === 'undefined' || csvData === null || csvData.length === 0) {
         throw("csvData can not be empty");
       } else {  
 
@@ -42,33 +30,38 @@ exports.handler = async function(context, event, callback) {
         
         let promises = []
 
-        csvData.forEach((msg) => {
+        csvData.map((row) => {
+          let phoneNumber = row[phoneNumberColumn]
+          if(!phoneNumber.startsWith('+'))phoneNumber = `+${phoneNumber}`
           promises.push(
-            expbackoff.expbackoff(async () => {return twilioClient.lookups.v1.phoneNumbers(msg[selectedPhoneNumberColumn])
-            .fetch(carrierSwitch ? {type: ['carrier']} : "")})
+            expbackoff.expbackoff(async () => {
+              return twilioClient.lookups.v2.phoneNumbers(phoneNumber)
+              .fetch(checkLineType ? {fields: 'line_type_intelligence'} : "")
+            })
           );
         })
 
         console.log(promises.length)
 
-        Promise.allSettled(promises).then((result) => {
+        Promise.allSettled(promises).then(result => {
           result.forEach((r,index) => {
             console.log(r)
             if (r.status === "rejected") {
               if (r.reason.status === 404) {
-                invalidNumbers_ID.push(start + index)
+                invalidNumbers_ID.push(startIndex + index)
                 invalidNumbers.push(csvData[index].UniqueID)
                 return;
               }            
             }
             else if (r.status === "fulfilled") {
               sentSuccess++
-              if (carrierSwitch){
-                if (r.value.carrier.type !== 'mobile') {
-                  nonmobileNumbers_ID.push(start + index)
-                  nonmobileNumbers.push(csvData[index].UniqueID)
+              if (checkLineType){
+                if (r.value.lineTypeIntelligence) {
+                  if(r.value.lineTypeIntelligence.type !== "mobile"){
+                    nonmobileNumbers_ID.push(startIndex + index)
+                    nonmobileNumbers.push(csvData[index].UniqueID)
+                  }               
                 }
-
               }
             }
           });    
@@ -83,7 +76,7 @@ exports.handler = async function(context, event, callback) {
               invalidNumbers_ID: invalidNumbers_ID
             },
           })
-          callback(null, response);   
+          return callback(null, response);   
         })
     }
     }
@@ -91,7 +84,7 @@ exports.handler = async function(context, event, callback) {
       console.log("error:" + err);
       response.setStatusCode(500);
       response.setBody(err);
-      callback(null, response);
+      return callback(null, response);
     }
    
   }

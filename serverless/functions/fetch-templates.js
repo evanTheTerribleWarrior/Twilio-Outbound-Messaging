@@ -1,5 +1,5 @@
 const axios = require('axios').default;
-const URL = "https://messaging.twilio.com/v1/Channels/WhatsApp/Templates"
+const URL = "https://content.twilio.com/v1/Content"
 
 exports.handler = async function(context, event, callback) {
 
@@ -8,18 +8,8 @@ exports.handler = async function(context, event, callback) {
 
   const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
   const checkAuth = require(checkAuthPath)
-
-  let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
-  if(!check.allowed){
-    response
-    .setBody('Unauthorized')
-    .setStatusCode(401)
-    .appendHeader(
-      'WWW-Authenticate',
-      'Bearer realm="Access to the app"'
-    );
-    return callback(null,response);
-  }
+  let check = checkAuth.checkAuth(event.request.cookies, context.JWT_SECRET);
+  if(!check.allowed)return callback(null,check.response);
 
 	try {
 
@@ -36,29 +26,28 @@ exports.handler = async function(context, event, callback) {
       if(templates.status !== 200){
         throw("Could not load templates")
       }
+      console.log(templates.data.contents)
 
-      templates.data.whatsapp_templates.forEach(t => {
+      templates.data.contents.forEach(t => {
 
-        let language;
-        let content;
-
-        for(let i = 0; i < t.languages.length; i++){
-          if(t.languages[i].status === "approved"){
-            language = t.languages[i].language;
-            content = t.languages[i].content
-            templates_array.push(
-              {
-                'name': t.template_name + " - HT..." + t.sid.slice(-4),
-                'content': content,
-                'language': language,
-                'sid': t.sid
-              }
-            )
+          const templateData = {
+            'name': t.friendly_name + " - HX..." + t.sid.slice(-4),
+            'language': t.language,
+            'content': t.types,
+            'sid': t.sid,
+            'variables': t.variables
           }
-        }
 
-      	
+          if(event.channelSelection === "SMS"){
+            if ('twilio/text' in t.types || 'twilio/media' in t.types){
+              templates_array.push(templateData)
+            }
+          }
+          else {
+            templates_array.push(templateData)
+          }  	
       });
+      
         response.setBody({
             status: true,
             message: "Getting Templates done",

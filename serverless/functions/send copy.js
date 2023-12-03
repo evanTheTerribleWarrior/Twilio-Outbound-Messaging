@@ -5,37 +5,35 @@ exports.handler = function(context, event, callback) {
 
     const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
     const checkAuth = require(checkAuthPath)
-
-    let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
-    if(!check.allowed){
-      response
-      .setBody('Unauthorized')
-      .setStatusCode(401)
-      .appendHeader(
-        'WWW-Authenticate',
-        'Bearer realm="Access to the app"'
-      );
-      return callback(null,response);
-    }
+    let check = checkAuth.checkAuth(event.request.cookies, context.JWT_SECRET);
+    if(!check.allowed)return callback(null,check.response);
    
     try {
 
-      const twilioClient = context.getTwilioClient();
-
-      console.log(`Array before sending ${JSON.stringify(event.sendResultsArray)}`)
-
-      sentSuccess = 0;
-      sentErrors = 0;
+      let sentSuccess = 0;
+      let sentErrors = 0;
       let errorObj = {};
 
-      if (typeof event.textmsg === 'undefined' || event.textmsg === null || event.textmsg.length === 0) {
+      const twilioClient = context.getTwilioClient();
+
+      const { startIndex, 
+        channelSelection,
+        messageTypeSelection,
+        senderTypeSelection} = event;
+      
+      let sender;
+      senderTypeSelection === "Messaging Service" ? sender = event.selectedService : sender = event.selectedSingleSender;      
+
+      let messageData;
+      
+      /*if (typeof event.textmsg === 'undefined' || event.textmsg === null || event.textmsg.length === 0) {
           throw("Message can not be empty");
       } else if (typeof event.sender === 'undefined' || event.sender === null || event.sender.length === 0) {
           throw("Sender can not be empty");
       } else if (typeof event.csvData === 'undefined' || event.csvData === null || event.csvData.length === 0) {
           throw("csvData can not be empty");
-      } else {
-        let msgTemplate = event.textmsg;
+      } else {*/
+        let template = event.template;
         let results = event.csvData;
 
         let start = event.start
@@ -79,24 +77,34 @@ exports.handler = function(context, event, callback) {
           }
           
   
-          let body = msgTemplate;
+          /*let body = template;
           Object.keys(msg).forEach((k) => {
             body = body.replace("{{" + k + "}}", msg[k]);
             
-          });
+          });*/
 
           if(event.optOutSwitch){
             body += "\nSTOP: https://" + context.DOMAIN_NAME + "/o?" + base10_to_base64(msg[selectedPhoneNumberColumn])
           }
 
-          let to = (event.channel === "Whatsapp") ? "whatsapp:" + msg[selectedPhoneNumberColumn] : msg[selectedPhoneNumberColumn]
+          let to = (event.channel === "Whatsapp") ? "whatsapp:+" + msg[selectedPhoneNumberColumn] : msg[selectedPhoneNumberColumn]
 
           let payload = {}
           payload["to"] = to.toString();
-          payload["body"] = body.toString();
+          payload["contentSid"] = template.sid;
+
           if (!event.isMsgService) payload["from"] = senderId.toString()
-          else payload["messagingServiceSid"] = senderId.toString()
+          else payload["from"] = senderId.toString()
           if(event.mediaURL)payload["mediaUrl"] = [event.mediaURL];
+
+          const { sendASAP, sendDate } = event;
+          console.log("Passing date: " + sendASAP + sendDate)
+          if(!sendASAP) {
+            payload["scheduleType"] = "fixed";
+            payload["sendAt"] = sendDate.replace(/ /g, "T") + 'Z';
+          }
+
+          console.log(payload)
   
           const expbackoffPath = Runtime.getFunctions()['exponential-backoff'].path;
           const expbackoff = require(expbackoffPath)
@@ -155,7 +163,7 @@ exports.handler = function(context, event, callback) {
   
         });
   
-      }
+      //}
     } catch (err) {
       console.log("error:" + err);
       response.setStatusCode(500);

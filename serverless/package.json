@@ -1,5 +1,5 @@
 {
-  "name": "outbound-messaging",
+  "name": "csv-to-sms-app",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -11,9 +11,7 @@
     "@twilio/runtime-handler": "1.2.2",
     "axios": "^0.27.2",
     "jsonwebtoken": "^8.5.1",
-    "recharts": "^2.1.9",
-    "twilio": "^3.56",
-    "uuid": "^8.3.2"
+    "twilio": "^4.18.0"
   },
   "devDependencies": {
     "twilio-run": "^3.4.1"

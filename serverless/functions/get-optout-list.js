@@ -35,6 +35,8 @@ exports.handler = async function(context, event, callback) {
                 optOutNumbers: optOutNumbers
             },
         })
+
+        console.log(`Returning opt out list: ${JSON.stringify(optOutNumbers)}`)
           
         callback(null, response)
       }

@@ -1,28 +1,17 @@
 exports.handler = async function(context, event, callback) {
 
-	
 	const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
 	const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
   const checkAuth = require(checkAuthPath)
-
-  let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
-  if(!check.allowed){
-    response
-    .setBody('Unauthorized')
-    .setStatusCode(401)
-    .appendHeader(
-      'WWW-Authenticate',
-      'Bearer realm="Access to the app"'
-    );
-    return callback(null,response);
-  }
+  let check = checkAuth.checkAuth(event.request.cookies, context.JWT_SECRET);
+  if(!check.allowed)return callback(null,check.response);
 
 	try {
     const twilioClient = context.getTwilioClient();
     let services_array = [];
-		let services = await twilioClient.messaging.services.list()
+		let services = await twilioClient.messaging.v1.services.list()
         services.forEach(s => {
 
         	services_array.push(
