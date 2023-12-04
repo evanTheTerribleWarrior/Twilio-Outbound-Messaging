@@ -46,7 +46,8 @@ exports.handler = async function(context, event, callback) {
                 r.value.data.message_receipts.map(receipt => {
                   messageReceiptsArray.push({
                     csvRowID: event.csvData[index].UniqueID,
-                    messageSid: receipt.sid
+                    messageSid: receipt.sid,
+                    csvDataIndex: index
                   })
                 })
               }   
@@ -55,7 +56,8 @@ exports.handler = async function(context, event, callback) {
                   failedReceiptsArray.push({
                     csvRowID: event.csvData[index].UniqueID,
                     error_code: receipt.error_code,
-                    error_message: receipt.error_message
+                    error_message: receipt.error_message,
+                    csvDataIndex: index
                   })
                 })
               }        

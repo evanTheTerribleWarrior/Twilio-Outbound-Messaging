@@ -44,7 +44,8 @@ exports.handler = function(context, event, callback) {
               sentSuccess++;
               messageReceiptsArray.push({
                 csvRowID: event.csvData[index].UniqueID,
-                messageSid: r.value.sid
+                messageSid: r.value.sid,
+                csvDataIndex: index
               })
           } 
           else { 
@@ -52,7 +53,8 @@ exports.handler = function(context, event, callback) {
             failedReceiptsArray.push({
               csvRowID: event.csvData[index].UniqueID,
               error_code: r.reason.code,
-              error_message: r.reason.moreInfo
+              error_message: r.reason.moreInfo,
+              csvDataIndex: index
             })    
           }
 

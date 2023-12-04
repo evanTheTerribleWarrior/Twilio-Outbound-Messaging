@@ -84,6 +84,7 @@ const CheckAndSend = () => {
     const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
 
     let checkedSuccess = 0;
+    let checkedErrors = 0;
     let nonmobileNumbers_ID = []
     let invalidNumbers_ID = []
     let nonmobileNumbers = []
@@ -92,6 +93,7 @@ const CheckAndSend = () => {
     results.forEach((r,index) => {
       if (r.status === 'fulfilled') {
         checkedSuccess += r.value.checkedSuccess;
+        checkedErrors += r.value.checkedErrors;
         invalidNumbers_ID = invalidNumbers_ID.concat(r.value.invalidNumbers_ID)
         nonmobileNumbers_ID = nonmobileNumbers_ID.concat(r.value.nonmobileNumbers_ID)
         invalidNumbers = invalidNumbers.concat(r.value.invalidNumbers)
@@ -103,6 +105,7 @@ const CheckAndSend = () => {
 
     const lookupDataForLogs = {
       checkedSuccess,
+      checkedErrors,
       invalidNumbers_ID,
       nonmobileNumbers_ID,
       invalidNumbers,

@@ -46,6 +46,8 @@ const CampaignTable = (props) => {
   const phoneNumberColumn = useSelector(state => state.csvDataStructure.csvSelectedColumn)
   const sendResultsArray = useSelector(state => state.messagingStructure.sendResultsArray)
   const customMessage = useSelector(state => state.messagingStructure.customMessage)
+  const lookupDataForLogs = useSelector(state => state.actionStructure.lookupDataForLogs)
+  
   const dispatch = useDispatch()
 
   const [editIdx, setEditIdx] = useState(-1);
@@ -92,7 +94,7 @@ const CampaignTable = (props) => {
       value: true
     }))
     
-    const endTime = new Date(); // Record end time
+    const endTime = new Date();
     const timeTaken = (endTime - startTime) / 1000;
 
     const getStatusDataForLogs = {
@@ -199,10 +201,10 @@ const CampaignTable = (props) => {
     
     let show = false;
 
-    /*if ((this.props.nonmobileNumbers && this.props.nonmobileNumbers.includes(UniqueID)) ||
-        (this.props.invalidNumbers && this.props.invalidNumbers.includes(UniqueID))
+    if ((lookupDataForLogs.nonmobileNumbers && lookupDataForLogs.nonmobileNumbers.includes(UniqueID)) ||
+        (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID))
     )
-      show = true;*/
+      show = true;
     
     if (sendResultsArray.length > 0){
       
@@ -228,6 +230,21 @@ const CampaignTable = (props) => {
 
     let index;
 
+    if (lookupDataForLogs.nonmobileNumbers && lookupDataForLogs.nonmobileNumbers.includes(UniqueID)){
+      title = "We could not identify this number as a valid mobile number. Ensure you don't send SMS to non-mobile numbers"
+      color = "orange"
+      icon = "WarningIcon"
+      interactive = false
+
+    }
+    else if (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID)){
+      title = "This number was marked as invalid, does it have the correct number of digits?"
+      color = "red"
+      icon = "ErrorIcon"
+      interactive = false
+
+    } 
+
     /*
     if(this.props.sentWithNotify){
       title = "Message Successfuly Created - Check Status periodically for final message status. If Status does not change in a few minutes, check Twilio Logs"
@@ -236,28 +253,13 @@ const CampaignTable = (props) => {
       interactive = false
       return {title, color, icon, interactive, renderTitleJSX}
     }
-
-    if (this.props.nonmobileNumbers && this.props.nonmobileNumbers.includes(UniqueID)){
-      title = "We could not identify this number as a valid mobile number. Ensure you don't send SMS to non-mobile numbers"
-      color = "orange"
-      icon = "WarningIcon"
-      interactive = false
-
-    }
-    else if (this.props.invalidNumbers && this.props.invalidNumbers.includes(UniqueID)){
-      title = "This number was marked as invalid, does it have the correct number of digits?"
-      color = "red"
-      icon = "ErrorIcon"
-      interactive = false
-
-    } 
     */
 
-    if (sendResultsArray.length > 0){    
+    else if (sendResultsArray.length > 0){    
       index = sendResultsArray.findIndex((element) => {return element.csvRowID === UniqueID})
     }
 
-    if (sendResultsArray && sendResultsArray.length > 0 && index !== -1 && (sendResultsArray[index]["status"] === "delivered" || sendResultsArray[index]["status"] === "read")){
+    else if (sendResultsArray && sendResultsArray.length > 0 && index !== -1 && (sendResultsArray[index]["status"] === "delivered" || sendResultsArray[index]["status"] === "read")){
       title = "Message marked as Delivered - It will be excluded from further 'Send Messages' actions"
       color = "green"
       icon = "CheckCircleIcon"
