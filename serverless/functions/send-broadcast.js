@@ -31,22 +31,37 @@ exports.handler = async function(context, event, callback) {
       }))
 
       let messageReceiptsArray = []
+      let failedReceiptsArray = []
       let sentSuccess = 0;
       let sentErrors = 0;
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
+          console.log(r.value.data)
+          console.log(r.status)
           if (r.status === "fulfilled"){
-              sentSuccess++;
-              r.value.data.message_receipts.map(receipt => {
-                messageReceiptsArray.push({
-                  csvRowID: event.csvData[index].UniqueID,
-                  messageSid: receipt.sid
+              sentSuccess += r.value.data.success_count; 
+              sentErrors += r.value.data.error_count;
+              if(r.value.data.message_receipts && r.value.data.message_receipts.length > 0){
+                r.value.data.message_receipts.map(receipt => {
+                  messageReceiptsArray.push({
+                    csvRowID: event.csvData[index].UniqueID,
+                    messageSid: receipt.sid
+                  })
                 })
-              })
+              }   
+              if(r.value.data.failed_message_receipts && r.value.data.failed_message_receipts.length > 0){
+                r.value.data.failed_message_receipts.map(receipt => {
+                  failedReceiptsArray.push({
+                    csvRowID: event.csvData[index].UniqueID,
+                    error_code: receipt.error_code,
+                    error_message: receipt.error_message
+                  })
+                })
+              }        
           } 
           else { 
-            sentErrors++;       
+            //sentErrors++       
           }
 
         });
@@ -57,7 +72,8 @@ exports.handler = async function(context, event, callback) {
           data: {
             sentSuccess: sentSuccess,
             sentErrors: sentErrors,
-            messageReceiptsArray: messageReceiptsArray
+            messageReceiptsArray: messageReceiptsArray,
+            failedReceiptsArray: failedReceiptsArray
           }
         })
         return callback(null, response);

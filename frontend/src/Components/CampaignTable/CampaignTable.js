@@ -280,22 +280,6 @@ const CampaignTable = (props) => {
       interactive = false
     }
 
-    /*
-    if(this.props.optOutNumbers.length > 0){
-      let index = csvData.findIndex((element) => { return element.UniqueID === UniqueID})
-      if(index !== -1){
-        let num = csvData[index][this.props.phoneNumberColumn];
-        num.startsWith("+") ? "" : num = "+" + num
-        let res = this.props.optOutNumbers.findIndex((number) => {return num === number })
-        if(res !== -1){
-          title = "This number is in your Opt Out list, they will not receive a message"
-          color = "orange"
-          icon = "ErrorIcon"
-          interactive = false
-        }
-      }
-    }*/
-    
     return {title, color, icon, interactive, renderTitleJSX}
 
   }

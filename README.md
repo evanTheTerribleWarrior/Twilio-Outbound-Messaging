@@ -1,5 +1,7 @@
 **Note:** This is the documentation for the updated version of the project that includes the latest Twilio APIs, like Content API and Broadcast API. If you are looking for the old version, please check the [old_version branch](https://github.com/evanTheTerribleWarrior/Twilio-Outbound-Messaging/tree/old_version).
 
+**Note 2:** The repo is still work in progress. This note will be removed once the repo is in a stable state across all functionalities. Currently working on Logs, CampaignTable mostly
+
 ---
 
 # Outbound Messaging App

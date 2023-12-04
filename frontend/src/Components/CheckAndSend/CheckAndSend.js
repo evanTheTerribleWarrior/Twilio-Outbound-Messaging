@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch} from 'react-redux'
-import { Button, Stack, Typography, Box, FormControlLabel, Switch, Alert, IconButton, AlertTitle } from '@mui/material';
+import { Button, Stack, Box, FormControlLabel, Switch, Alert, IconButton, AlertTitle } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ProTip from '../ProTip/ProTip';
 import { ACTION_TYPES, VARIABLES, SETTINGS_TYPES, MESSAGING_TYPES, CSVDATA_TYPES } from '../../Utils/variables';
@@ -115,7 +115,7 @@ const CheckAndSend = () => {
 			value: lookupDataForLogs
 	  }))
     
-    const endTime = new Date(); // Record end time
+    const endTime = new Date();
     const timeTaken = (endTime - startTime) / 1000;
 
     console.log(`The whole thing for ${csvData.length} rows took ${timeTaken}`)
@@ -140,9 +140,18 @@ const CheckAndSend = () => {
 
     const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
 
+    let sentSuccess = 0;
+    let sentErrors = 0;
+    let messageReceiptsArray = [];
+    let failedReceiptsArray = [];
 
     results.forEach((r,index) => {
       if (r.status === 'fulfilled') {
+        sentSuccess += r.value.sentSuccess;
+        sentErrors += r.value.sentErrors;
+        messageReceiptsArray = messageReceiptsArray.concat(r.value.messageReceiptsArray)
+        failedReceiptsArray = failedReceiptsArray.concat(r.value.failedReceiptsArray)
+
         dispatch(updateMessagingState({
           type: MESSAGING_TYPES.UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND,
           value: r.value.messageReceiptsArray
@@ -151,18 +160,24 @@ const CheckAndSend = () => {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
     });
-    
-    const endTime = new Date(); // Record end time
-    const timeTaken = (endTime - startTime) / 1000;
 
     const sendDataForLogs = {
+      sentSuccess,
+      sentErrors,
+      messageReceiptsArray,
+      failedReceiptsArray,
       source: "send"
     }
+
+    console.log(sendDataForLogs)
 
     dispatch(updateActionState({
 			type: ACTION_TYPES.SEND_DATA_FOR_LOGS,
 			value: sendDataForLogs
 	  }))
+
+    const endTime = new Date();
+    const timeTaken = (endTime - startTime) / 1000;
 
     console.log(`The whole thing for ${csvData.length} rows took ${timeTaken}`)
 
