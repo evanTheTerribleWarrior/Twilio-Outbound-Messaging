@@ -123,7 +123,7 @@ const CheckAndSend = () => {
   }
 
   const handleSendMessages = async () => {
-    if (hasEmptyNumbers) return;
+    if (hasEmptyNumbers()) return;
     const startTime = new Date();
     const chunkSize = broadcastSwitch ? VARIABLES.BROADCAST_API_CHUNK_SIZE : VARIABLES.SMS_API_CHUNK_SIZE;
     const chunks = chunkArray(csvData, chunkSize);

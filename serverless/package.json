@@ -1,6 +1,6 @@
 {
-  "name": "csv-to-sms-app",
-  "version": "0.0.0",
+  "name": "outbound-messaging-v2",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

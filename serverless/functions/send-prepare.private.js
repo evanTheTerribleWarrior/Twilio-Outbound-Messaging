@@ -27,8 +27,11 @@ exports.prepareData = (event) => {
         let userObj = {}
 
         let phoneNumber = row[phoneNumberColumn]
-        if (!phoneNumber.startsWith('+')) phoneNumber = `+${phoneNumber}`
+        if(channelSelection === "SMS" || channelSelection === "Whatsapp"){
+            if (!phoneNumber.startsWith('+')) phoneNumber = `+${phoneNumber}`
+        }
         userObj['to'] = channelSelection === "Whatsapp" ? `whatsapp:${phoneNumber}`: `${phoneNumber}`
+        userObj['to'] = channelSelection === "FBM" ? `messenger:${phoneNumber}`: `${phoneNumber}`
 
         if(messageTypeSelection === "Custom") {
           let body = event.customMessage;

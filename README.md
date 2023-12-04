@@ -41,7 +41,7 @@ cd frontend
 npm install
 ```
 
-- Go to `serverless` directory. Run `npm install` and then create .env file and add USERNAME, PASSWORD, JWT_SECRET that are used for authentication. Make them hard to guess if you deploy this!
+- Go to `serverless` directory. Run `npm install` and then create .env file and add USERNAME, PASSWORD, JWT_SECRET that are used for authentication. Make them hard to guess if you deploy this! If you deploy locally, you need also to add the AUTH_TOKEN and ACCOUNT_SID with your Twilio credentials, but if you deploy remotely you DO NOT need them
 ```shell
 cd serverless
 npm install
@@ -83,7 +83,7 @@ A sample .csv is included that you can load and play around. It has certain elem
 
 ## TODO
 
-- Still work in progress
+- Messenger via Content API templates gets stuck (works fine with normal custom message)
 
 ## Credits
 This repository is built upon the following:
