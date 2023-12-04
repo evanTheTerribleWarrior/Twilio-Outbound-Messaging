@@ -6,7 +6,7 @@
 
 Easily set up and send out messaging campaigns using your Twilio account.
 
-![Application screenshot](https://github.com/evanTheTerribleWarrior/Twilio-Outbound-Messaging/assets/111442118/ccc8706d-997d-4252-afde-01c9050d0820)
+![Application screenshot](https://github.com/evanTheTerribleWarrior/Twilio-Outbound-Messaging/assets/111442118/c436f41e-15b7-45d7-9eff-da0c53ff9911)
 
 ## Key features
  * Load data from a CSV file

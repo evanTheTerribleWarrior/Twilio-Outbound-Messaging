@@ -170,10 +170,7 @@ const CheckAndSend = () => {
 
 
   return (
-    <Box mt={2}>
-    <Typography variant="h5" component="h1" gutterBottom>
-      Check and Send
-    </Typography>
+    <>
     <Box mt={1}>
         <FormControlLabel control={<Switch checked={lineTypeSwitch} onChange={handleLineTypeSwitch} />} label="Line Type Intelligence" />
         <IconButton onClick={() => setLineTypeAlert(lineTypeAlertClicked ? false : true)}>
@@ -236,7 +233,7 @@ const CheckAndSend = () => {
                 Send messages
               </Button>
         </Stack>
-    </Box>
+    </>
   );
 };
 

@@ -18,11 +18,8 @@ const SenderBuilder = () => {
         }))
     }
     return (
-        <Box mt={2}>
+        <>
         <FormControl fullWidth>
-        <Typography variant="h5" component="h1" gutterBottom>
-            Sender
-        </Typography>
         <SenderTypeSelection/>
         {
             senderTypeSelection === "Single" && (
@@ -40,7 +37,7 @@ const SenderBuilder = () => {
             senderTypeSelection === "Messaging Service" && <MessagingServiceSelection/>
         }
         </FormControl>
-        </Box>
+        </>
     )
 
 }

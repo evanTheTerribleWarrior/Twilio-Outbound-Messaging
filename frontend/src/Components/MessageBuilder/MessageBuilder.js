@@ -69,11 +69,8 @@ const MessageBuilder = () => {
     
 
     return (
-        <Box mt={2}>
+        <>
         <FormControl fullWidth>
-        <Typography variant="h5" component="h1" gutterBottom>
-            Message
-        </Typography>
         <MessageTypeSelection/>
         {
             messageTypeSelection === "Custom" && (<>
@@ -129,7 +126,7 @@ const MessageBuilder = () => {
         { template && <ContentTemplateRenderer template={template}/>}
         <MessageScheduler/>
         </FormControl>
-        </Box>
+        </>
     )
 }
 
