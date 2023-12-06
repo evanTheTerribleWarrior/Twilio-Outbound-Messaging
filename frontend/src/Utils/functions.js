@@ -173,6 +173,23 @@ export const processChunksInBatches = async (chunks, processChunk, limit) => {
   return Promise.allSettled(results);
 }
 
+export const findDuplicatePhoneIndices = (csvData) => {
+  const phoneIndices = {};
+  const duplicates = [];
 
+  csvData.forEach((item, index) => {
+    if (phoneIndices.hasOwnProperty(item.Phone)) {
+      if (phoneIndices[item.Phone].length === 1) {
+        duplicates.push(phoneIndices[item.Phone][0]);
+      }
+      duplicates.push(index); // Add the current index
+      phoneIndices[item.Phone].push(index);
+    } else {
+      phoneIndices[item.Phone] = [index];
+    }
+  });
+
+  return duplicates;
+}
 
 

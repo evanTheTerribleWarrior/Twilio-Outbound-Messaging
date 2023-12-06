@@ -6,7 +6,8 @@ import { ACTION_TYPES, LOGS } from '../../Utils/variables';
     totalLogs: "",
     sendDataForLogs: {},
     getStatusDataForLogs: {},
-    emptyNumbersForLogs: {}
+    emptyNumbersForLogs: {},
+    duplicateNumberDataForLogs: {}
   };
   
   const actionSlice = createSlice({
@@ -26,6 +27,9 @@ import { ACTION_TYPES, LOGS } from '../../Utils/variables';
               break;
               case ACTION_TYPES.EMPTY_NUMBERS_FOR_LOGS:
                 state.emptyNumbersForLogs = action.payload.value
+                break;
+                case ACTION_TYPES.DUPLICATE_NUMBERS_FOR_LOGS:
+                state.duplicateNumberDataForLogs = action.payload.value
                 break;
             case ACTION_TYPES.TOTAL_LOGS:
                 state.totalLogs = action.payload.value

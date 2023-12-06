@@ -1,6 +1,5 @@
 CampaignTable:
 - When I go to the last page, if I go back to another page it breaks
-- Check for duplicates
 
 Check and Send:
 - Add "Sending/Checking please wait" message
@@ -13,8 +12,8 @@ Logs:
 Generic:
 - Add progress bar?
 - Allow local files to be added as Media URL?
-- Preview Media URL?
 - Check if hashrouter needed when deploying to twilio account for routing?
+- Clear logs
 
 Future:
-- Add FBM and GBM?
+- Add GBM?

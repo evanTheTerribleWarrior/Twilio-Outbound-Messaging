@@ -4,7 +4,7 @@ import { Button, Stack, Box, FormControlLabel, Switch, Alert, IconButton, AlertT
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ProTip from '../ProTip/ProTip';
 import { ACTION_TYPES, VARIABLES, SETTINGS_TYPES, MESSAGING_TYPES, CSVDATA_TYPES } from '../../Utils/variables';
-import { checkNumbers, chunkArray, processChunksInBatches, sendMessages } from '../../Utils/functions';
+import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices } from '../../Utils/functions';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 import { updateMessagingState } from '../../Redux/slices/messagingSlice';
@@ -46,6 +46,10 @@ const CheckAndSend = () => {
       return true;
     }
     else {
+      dispatch(updateActionState({
+        type: ACTION_TYPES.EMPTY_NUMBERS_FOR_LOGS,
+        value: {}
+      }))
       return false;
     }
   }
@@ -63,10 +67,34 @@ const CheckAndSend = () => {
       value: event.target.checked
     }))
   }
+
+  const hasDuplicates = () => {
+    let duplicateNumbers = findDuplicatePhoneIndices(csvData)
+    if (duplicateNumbers.length > 0) {
+      const duplicateNumberDataForLogs = {
+        duplicateNumbers: duplicateNumbers,
+        source: "duplicateNumbersError"
+      }
+      dispatch(updateActionState({
+        type: ACTION_TYPES.DUPLICATE_NUMBERS_FOR_LOGS,
+        value: duplicateNumberDataForLogs
+      }))
+      return true;
+    }
+    else{
+      dispatch(updateActionState({
+        type: ACTION_TYPES.DUPLICATE_NUMBERS_FOR_LOGS,
+        value: {}
+      }))
+      return false;
+    }
+    
+  }
   
   const handleCheckNumbers = async () => {
-    console.log(hasEmptyNumbers())
     if (hasEmptyNumbers()) return;
+    if (hasDuplicates()) return;
+
     const startTime = new Date();
     const chunkSize = VARIABLES.LOOKUP_CHUNK_SIZE;
     const chunks = chunkArray(csvData, chunkSize);
@@ -127,6 +155,7 @@ const CheckAndSend = () => {
 
   const handleSendMessages = async () => {
     if (hasEmptyNumbers()) return;
+    if (hasDuplicates()) return;
     const startTime = new Date();
     const chunkSize = broadcastSwitch ? VARIABLES.BROADCAST_API_CHUNK_SIZE : VARIABLES.SMS_API_CHUNK_SIZE;
     const chunks = chunkArray(csvData, chunkSize);

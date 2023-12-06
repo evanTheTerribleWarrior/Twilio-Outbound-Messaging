@@ -41,7 +41,8 @@ export const MESSAGING_TYPES = {
   CUSTOM_MEDIA_URL: 'customMediaURL',
   SCHEDULED_DATE: 'scheduledDate',
   SEND_RESULTS_ARRAY: 'sendResultsArray',
-  UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND: 'sendResultsArrayUpdateAfterSend'
+  UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND: 'sendResultsArrayUpdateAfterSend',
+  
 }
 
 export const ACTION_TYPES = {
@@ -49,7 +50,8 @@ export const ACTION_TYPES = {
   TOTAL_LOGS: 'totalLogs',
   SEND_DATA_FOR_LOGS: 'sendDataForLogs',
   GET_STATUS_DATA_FOR_LOGS: 'getStatusDataForLogs',
-  EMPTY_NUMBERS_FOR_LOGS: 'emptyNumbersForLogs'
+  EMPTY_NUMBERS_FOR_LOGS: 'emptyNumbersForLogs',
+  DUPLICATE_NUMBERS_FOR_LOGS: 'duplicateNumberDataForLogs'
 }
 
 export const VARIABLES = {

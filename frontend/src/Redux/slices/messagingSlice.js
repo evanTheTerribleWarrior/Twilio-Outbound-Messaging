@@ -54,6 +54,7 @@ import { MESSAGING_TYPES } from '../../Utils/variables';
             case MESSAGING_TYPES.SEND_RESULTS_ARRAY:
               state.sendResultsArray = action.payload.value
               break;
+              
             case MESSAGING_TYPES.UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND:
               state.sendResultsArray = state.sendResultsArray.map(row => {
                 const result = action.payload.value.find(r => r.csvRowID === row.csvRowID);

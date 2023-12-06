@@ -19,6 +19,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import Tooltip from '@mui/material/Tooltip';
 import TextField from '@mui/material/TextField';
 import Button from "@mui/material/Button";
@@ -39,6 +40,7 @@ import { chunkArray, processChunksInBatches, getMessageStatus } from '../../Util
 
 const in_progress_statuses = ["accepted", "queued", "sent", "sending"]
 const failed_statuses = ["undelivered", "failed"]
+const PlaceholderIcon = () => <HourglassEmptyIcon color="action" />;
 
 const CampaignTable = (props) => {
 
@@ -47,7 +49,7 @@ const CampaignTable = (props) => {
   const sendResultsArray = useSelector(state => state.messagingStructure.sendResultsArray)
   const customMessage = useSelector(state => state.messagingStructure.customMessage)
   const lookupDataForLogs = useSelector(state => state.actionStructure.lookupDataForLogs)
-  
+  const checkLineType = useSelector(state => state.settingsStructure.checkLineType)
   const dispatch = useDispatch()
 
   const [editIdx, setEditIdx] = useState(-1);
@@ -196,33 +198,39 @@ const CampaignTable = (props) => {
     }));
  };
 
+ const shouldShowIconLookup = (UniqueID) => {
+    
+  let show = false;
+  if ((lookupDataForLogs.nonmobileNumbers && lookupDataForLogs.nonmobileNumbers.includes(UniqueID)) ||
+    (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID))
+  ){return show = true;}
+
+  console.log("result: " +show)
+  
+  return show;
+}
+
 
   const shouldShowIcon = (UniqueID) => {
     
     let show = false;
 
-    if ((lookupDataForLogs.nonmobileNumbers && lookupDataForLogs.nonmobileNumbers.includes(UniqueID)) ||
-        (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID))
-    )
-      show = true;
-    
-    if (sendResultsArray.length > 0){
+
+      if (sendResultsArray.length > 0){
       
-      let index = sendResultsArray.findIndex((element) => { return element.csvRowID === UniqueID})
-      console.log(index)
-      if (index !== -1){
-        if (sendResultsArray[index]["status"] !== "")
-          show = true;
+        let index = sendResultsArray.findIndex((element) => { return element.csvRowID === UniqueID})
+        console.log(index)
+        if (index !== -1){
+          if (sendResultsArray[index]["status"] !== "")
+            return show = true;
+        }
       }
-
-    }
-
+    
+    
     return show;
   }
 
-  const showRelevantIcon = (UniqueID) =>{
-
-    
+  const showRelevantIconLookup = (UniqueID) =>{
     let title, color;
     let icon;
     let interactive = false;
@@ -245,17 +253,21 @@ const CampaignTable = (props) => {
 
     } 
 
-    /*
-    if(this.props.sentWithNotify){
-      title = "Message Successfuly Created - Check Status periodically for final message status. If Status does not change in a few minutes, check Twilio Logs"
-      color = "grey"
-      icon = "CheckCircleIcon"
-      interactive = false
-      return {title, color, icon, interactive, renderTitleJSX}
-    }
-    */
+    return {title, color, icon, interactive, renderTitleJSX}
 
-    else if (sendResultsArray.length > 0){    
+  }
+
+  const showRelevantIcon = (UniqueID) =>{
+
+    
+    let title, color;
+    let icon;
+    let interactive = false;
+    let renderTitleJSX = false;
+
+    let index;
+
+    if (sendResultsArray.length > 0){    
       index = sendResultsArray.findIndex((element) => {return element.csvRowID === UniqueID})
     }
 
@@ -372,7 +384,8 @@ const CampaignTable = (props) => {
               ))}
               <TableCell style={{color: 'grey'}}>Edit</TableCell>
               <TableCell style={{color: 'grey'}}>Delete</TableCell>
-              <TableCell ><Button variant="outlined" onClick={handleGetStatus} >Get Status</Button></TableCell>
+              <TableCell style={{color: 'grey'}}>Lookup Status</TableCell>
+              <TableCell ><Button variant="outlined" onClick={handleGetStatus} >Get Message Status</Button></TableCell>
             </TableRow>
           </TableHead>
 
@@ -453,28 +466,39 @@ const CampaignTable = (props) => {
                   </Tooltip>   
                   </TableCell>  
 
+                  <TableCell >
+                  {shouldShowIconLookup(csvData[current + i].UniqueID) ?
+                  (<Tooltip
+                  title={showRelevantIconLookup(csvData[current + i].UniqueID).title} 
+                  interactive={showRelevantIconLookup(current + i).interactive ? 1 : 0}>
+                    <IconButton >
+                      {showRelevantIconLookup(csvData[current + i].UniqueID).icon === "WarningIcon"? <WarningIcon style={{color: showRelevantIconLookup(csvData[current + i].UniqueID).color}} /> : "" }
+                      {showRelevantIconLookup(csvData[current + i].UniqueID).icon === "ErrorIcon"? <ErrorIcon style={{color: showRelevantIconLookup(csvData[current + i].UniqueID).color}} /> : "" }
+                      {showRelevantIconLookup(csvData[current + i].UniqueID).icon === "CheckCircleIcon"? <CheckCircleIcon style={{color: showRelevantIconLookup(csvData[current + i].UniqueID).color}} /> : "" }
+                    </IconButton>
+                  </Tooltip>): <HourglassEmptyIcon/>}
+                  </TableCell>
 
-
-                  {shouldShowIcon(csvData[current + i].UniqueID) &&
-
-                    (<TableCell >
-                     <Tooltip
-                     title={showRelevantIcon(csvData[current + i].UniqueID).renderTitleJSX ?
-                        (<>
-                        Error code: {sendResultsArray[current + i]["error"].errorCode}<br/>
-                        {sendResultsArray[current + i]["error"].errorLink ? (<>For more information please click <a href={sendResultsArray[current + i]["error"]["errorLink"]} target="_blank">HERE</a></>) : (<>For more information please click <a href={"https://twilio.com/docs/api/errors/" + sendResultsArray[current + i]["error"].errorCode} target="_blank">HERE</a></>)}   
-                        </>)
-                      : showRelevantIcon(csvData[current + i].UniqueID).title} 
-                     interactive={showRelevantIcon(current + i).interactive ? 1 : 0}>
-                      <IconButton >
-                        {showRelevantIcon(csvData[current + i].UniqueID).icon === "WarningIcon"? <WarningIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
-                        {showRelevantIcon(csvData[current + i].UniqueID).icon === "ErrorIcon"? <ErrorIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
-                        {showRelevantIcon(csvData[current + i].UniqueID).icon === "CheckCircleIcon"? <CheckCircleIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
-                      </IconButton>
-                    </Tooltip>   
-                    </TableCell>)
+                    <TableCell >
+                      {shouldShowIcon(csvData[current + i].UniqueID) ?
+                      (<Tooltip
+                      title={showRelevantIcon(csvData[current + i].UniqueID).renderTitleJSX ?
+                          (<>
+                          Error code: {sendResultsArray[current + i]["error"].errorCode}<br/>
+                          {sendResultsArray[current + i]["error"].errorLink ? (<>For more information please click <a href={sendResultsArray[current + i]["error"]["errorLink"]} target="_blank">HERE</a></>) : (<>For more information please click <a href={"https://twilio.com/docs/api/errors/" + sendResultsArray[current + i]["error"].errorCode} target="_blank">HERE</a></>)}   
+                          </>)
+                        : showRelevantIcon(csvData[current + i].UniqueID).title} 
+                      interactive={showRelevantIcon(current + i).interactive ? 1 : 0}>
+                        <IconButton >
+                          {showRelevantIcon(csvData[current + i].UniqueID).icon === "WarningIcon"? <WarningIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
+                          {showRelevantIcon(csvData[current + i].UniqueID).icon === "ErrorIcon"? <ErrorIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
+                          {showRelevantIcon(csvData[current + i].UniqueID).icon === "CheckCircleIcon"? <CheckCircleIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
+                        </IconButton>
+                      </Tooltip>) : <PlaceholderIcon/> 
+                       } 
+                    </TableCell>
                     
-                  } 
+                 
                   
               </TableRow>  
           </>))}
