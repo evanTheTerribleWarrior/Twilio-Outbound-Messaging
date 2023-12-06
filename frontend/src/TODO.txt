@@ -7,13 +7,13 @@ Check and Send:
 
 Logs:
 - Update logs for all the use cases
-- Separate error logs in Lookup that was not 404 for the number to give feedback
 
 Generic:
 - Add progress bar?
 - Allow local files to be added as Media URL?
 - Check if hashrouter needed when deploying to twilio account for routing?
-- Clear logs
+- Send results to webhook?
+- Make concurrency and batch limits configurable?
 
 Future:
 - Add GBM?

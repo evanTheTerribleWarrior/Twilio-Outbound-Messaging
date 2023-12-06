@@ -202,33 +202,11 @@ const CampaignTable = (props) => {
     
   let show = false;
   if ((lookupDataForLogs.nonmobileNumbers && lookupDataForLogs.nonmobileNumbers.includes(UniqueID)) ||
-    (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID))
+    (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID)) || (lookupDataForLogs.checkedSuccess > 0 || lookupDataForLogs.checkedErrors >0)
   ){return show = true;}
-
-  console.log("result: " +show)
   
   return show;
 }
-
-
-  const shouldShowIcon = (UniqueID) => {
-    
-    let show = false;
-
-
-      if (sendResultsArray.length > 0){
-      
-        let index = sendResultsArray.findIndex((element) => { return element.csvRowID === UniqueID})
-        console.log(index)
-        if (index !== -1){
-          if (sendResultsArray[index]["status"] !== "")
-            return show = true;
-        }
-      }
-    
-    
-    return show;
-  }
 
   const showRelevantIconLookup = (UniqueID) =>{
     let title, color;
@@ -236,42 +214,60 @@ const CampaignTable = (props) => {
     let interactive = false;
     let renderTitleJSX = false;
 
-    let index;
-
-    if (lookupDataForLogs.nonmobileNumbers && lookupDataForLogs.nonmobileNumbers.includes(UniqueID)){
-      title = "We could not identify this number as a valid mobile number. Ensure you don't send SMS to non-mobile numbers"
-      color = "orange"
-      icon = "WarningIcon"
-      interactive = false
-
+    if(lookupDataForLogs.checkedSuccess > 0 || lookupDataForLogs.checkedErrors >0){
+      if (lookupDataForLogs.nonmobileNumbers && lookupDataForLogs.nonmobileNumbers.includes(UniqueID)){
+        title = "We could not identify this number as a valid mobile number. Ensure you don't send SMS to non-mobile numbers"
+        color = "orange"
+        icon = "WarningIcon"
+        interactive = false
+  
+      }
+      else if (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID)){
+        title = "This number was marked as invalid, does it have the correct number of digits?"
+        color = "red"
+        icon = "ErrorIcon"
+        interactive = false
+      } 
+      else {
+        title = "This number passed the check"
+        color = "green"
+        icon = "CheckCircleIcon"
+        interactive = false
+      }
     }
-    else if (lookupDataForLogs.invalidNumbers && lookupDataForLogs.invalidNumbers.includes(UniqueID)){
-      title = "This number was marked as invalid, does it have the correct number of digits?"
-      color = "red"
-      icon = "ErrorIcon"
-      interactive = false
 
-    } 
+    
 
     return {title, color, icon, interactive, renderTitleJSX}
 
   }
 
+  const shouldShowIcon = (UniqueID) => {
+    let show = false;
+    if (sendResultsArray.length > 0){
+    
+      let index = sendResultsArray.findIndex((element) => { return element.csvRowID === UniqueID})
+      if (index !== -1){
+        if (sendResultsArray[index]["status"].length > 0)
+          return show = true;
+      }
+    }
+    return show;
+  }
+
   const showRelevantIcon = (UniqueID) =>{
 
-    
     let title, color;
     let icon;
     let interactive = false;
     let renderTitleJSX = false;
-
     let index;
 
     if (sendResultsArray.length > 0){    
       index = sendResultsArray.findIndex((element) => {return element.csvRowID === UniqueID})
     }
 
-    else if (sendResultsArray && sendResultsArray.length > 0 && index !== -1 && (sendResultsArray[index]["status"] === "delivered" || sendResultsArray[index]["status"] === "read")){
+    if (sendResultsArray && sendResultsArray.length > 0 && index !== -1 && (sendResultsArray[index]["status"] === "delivered" || sendResultsArray[index]["status"] === "read")){
       title = "Message marked as Delivered - It will be excluded from further 'Send Messages' actions"
       color = "green"
       icon = "CheckCircleIcon"
