@@ -1,5 +1,6 @@
 CampaignTable:
 - When I go to the last page, if I go back to another page it breaks
+- Update status as we get it?
 
 Check and Send:
 - Add "Sending/Checking please wait" message
@@ -9,11 +10,11 @@ Logs:
 - Update logs for all the use cases
 
 Generic:
-- Add progress bar?
 - Allow local files to be added as Media URL?
 - Check if hashrouter needed when deploying to twilio account for routing?
 - Send results to webhook?
 - Make concurrency and batch limits configurable?
+- Reset state when loading new file
 
 Future:
 - Add GBM?

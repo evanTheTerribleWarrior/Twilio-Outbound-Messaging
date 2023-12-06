@@ -90,10 +90,17 @@ const CheckAndSend = () => {
     }
     
   }
+
+  const updateProgressBar = (chunk) => {
+    dispatch(updateActionState({
+      type: ACTION_TYPES.PROGRESS_BAR_COUNT,
+      value: VARIABLES.LOOKUP_CHUNK_SIZE
+    }))
+  }
   
   const handleCheckNumbers = async () => {
     if (hasEmptyNumbers()) return;
-    if (hasDuplicates()) return;
+    //if (hasDuplicates()) return;
 
     const startTime = new Date();
     const chunkSize = VARIABLES.LOOKUP_CHUNK_SIZE;
@@ -106,7 +113,7 @@ const CheckAndSend = () => {
         startIndex: chunk.startIndex,
         checkLineType: lineTypeSwitch
       }
-      return await checkNumbers(data);
+      return await checkNumbers(data, updateProgressBar(VARIABLES.LOOKUP_CHUNK_SIZE));
     }
 
     const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
@@ -126,9 +133,11 @@ const CheckAndSend = () => {
         nonmobileNumbers_ID = nonmobileNumbers_ID.concat(r.value.nonmobileNumbers_ID)
         invalidNumbers = invalidNumbers.concat(r.value.invalidNumbers)
         nonmobileNumbers = nonmobileNumbers.concat(r.value.nonmobileNumbers)
+
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
+      
     });
 
     const lookupDataForLogs = {
@@ -167,7 +176,8 @@ const CheckAndSend = () => {
         phoneNumberColumn: phoneNumberColumn,
         ...messagingStructure
       }
-      return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard");
+
+      return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard", updateProgressBar(chunkSize));
     }
 
     const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
@@ -191,6 +201,10 @@ const CheckAndSend = () => {
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
+      dispatch(updateActionState({
+        type: ACTION_TYPES.PROGRESS_BAR_COUNT,
+        value: 1
+      }))
     });
 
     const sendDataForLogs = {

@@ -87,7 +87,7 @@ export async function removeJWT () {
   }
 }
 
-export async function sendMessages(sendData, sendType) {
+export async function sendMessages(sendData, sendType, updateProgressBar) {
   try {
     const endpoint = sendType === "broadcast" ? API_URLS.SEND_BROADCAST_API : API_URLS.SEND_SMS_API
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + endpoint 
@@ -101,13 +101,14 @@ export async function sendMessages(sendData, sendType) {
         credentials: 'same-origin'
     });
     const data = await response.json();
+    updateProgressBar()
     return data.data;
   } catch (error) {
       throw new Error(`sendMessages failed with error message: ${error}`);
   }
 }
 
-export async function checkNumbers(checkData) {
+export async function checkNumbers(checkData, updateProgressBar) {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.CHECK_NUMBERS    
     const response = await fetch(url, {
@@ -119,6 +120,7 @@ export async function checkNumbers(checkData) {
         credentials: 'same-origin'
     });
     const data = await response.json();
+    updateProgressBar()
     return data.data;
   } catch (error) {
       throw new Error(`checkNumbers failed with error message: ${error}`);
@@ -182,7 +184,7 @@ export const findDuplicatePhoneIndices = (csvData) => {
       if (phoneIndices[item.Phone].length === 1) {
         duplicates.push(phoneIndices[item.Phone][0]);
       }
-      duplicates.push(index); // Add the current index
+      duplicates.push(index);
       phoneIndices[item.Phone].push(index);
     } else {
       phoneIndices[item.Phone] = [index];

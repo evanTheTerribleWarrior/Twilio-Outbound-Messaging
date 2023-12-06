@@ -51,7 +51,8 @@ export const ACTION_TYPES = {
   SEND_DATA_FOR_LOGS: 'sendDataForLogs',
   GET_STATUS_DATA_FOR_LOGS: 'getStatusDataForLogs',
   EMPTY_NUMBERS_FOR_LOGS: 'emptyNumbersForLogs',
-  DUPLICATE_NUMBERS_FOR_LOGS: 'duplicateNumberDataForLogs'
+  DUPLICATE_NUMBERS_FOR_LOGS: 'duplicateNumberDataForLogs',
+  PROGRESS_BAR_COUNT: 'progressBarCount'
 }
 
 export const VARIABLES = {

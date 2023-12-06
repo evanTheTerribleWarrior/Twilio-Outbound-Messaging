@@ -7,7 +7,8 @@ import { ACTION_TYPES, LOGS } from '../../Utils/variables';
     sendDataForLogs: {},
     getStatusDataForLogs: {},
     emptyNumbersForLogs: {},
-    duplicateNumberDataForLogs: {}
+    duplicateNumberDataForLogs: {},
+    progressBarCount: 0
   };
   
   const actionSlice = createSlice({
@@ -30,6 +31,9 @@ import { ACTION_TYPES, LOGS } from '../../Utils/variables';
                 break;
                 case ACTION_TYPES.DUPLICATE_NUMBERS_FOR_LOGS:
                 state.duplicateNumberDataForLogs = action.payload.value
+                break;
+                case ACTION_TYPES.PROGRESS_BAR_COUNT:
+                state.progressBarCount += action.payload.value
                 break;
             case ACTION_TYPES.TOTAL_LOGS:
                 state.totalLogs = action.payload.value
