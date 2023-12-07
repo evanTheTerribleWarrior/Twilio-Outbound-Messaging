@@ -37,24 +37,23 @@ exports.handler = function(context, event, callback) {
       let sentErrors = 0;
       let messageReceiptsArray = []
       let failedReceiptsArray = []
+      const { startIndex } = event;
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
           if (r.status === "fulfilled"){
               sentSuccess++;
               messageReceiptsArray.push({
-                csvRowID: event.csvData[index].UniqueID,
-                messageSid: r.value.sid,
-                csvDataIndex: index
+                csvRowID: event.csvData[startIndex + index].UniqueID,
+                messageSid: r.value.sid
               })
           } 
           else { 
             sentErrors++;   
             failedReceiptsArray.push({
-              csvRowID: event.csvData[index].UniqueID,
+              csvRowID: event.csvData[startIndex + index].UniqueID,
               errorCode: r.reason.code,
               errorMessage: r.reason.moreInfo,
-              csvDataIndex: index,
               status: "failed"
             })    
           }

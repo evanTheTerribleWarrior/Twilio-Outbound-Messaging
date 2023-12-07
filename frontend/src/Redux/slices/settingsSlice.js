@@ -8,7 +8,14 @@ import { SETTINGS_TYPES } from '../../Utils/variables';
     checkMessagingService: false,
     checkScheduleMessages: false,
     checkBroadcastAPI: false,
-    enableGraph: false
+    enableGraph: false,
+    limits: {
+      lookupChunk: 50,
+      broadcastChunk: 100,
+      standardAPIChunk: 50,
+      browserConcurrency: 5,
+      getStatusChunk: 50
+    }
   };
   
   const settingsSlice = createSlice({

@@ -2,10 +2,13 @@
 
 exports.prepareData = (event) => {
 
-    const { startIndex, 
+    const { 
         channelSelection,
         messageTypeSelection,
-        senderTypeSelection, csvData, phoneNumberColumn} = event;
+        senderTypeSelection, 
+        csvData, 
+        phoneNumberColumn
+    } = event;
     
     let sender;
     senderTypeSelection === "Messaging Service" ? sender = event.selectedService : sender = event.selectedSingleSender;      

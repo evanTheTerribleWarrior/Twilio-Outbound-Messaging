@@ -10,6 +10,7 @@ import SenderBuilder from '../SenderBuilder/SenderBuilder';
 import Logs from '../Logs/Logs'
 import CampaignTable from '../CampaignTable/CampaignTable';
 import CheckAndSend from '../CheckAndSend/CheckAndSend';
+import Settings from '../Settings/Settings';
 import AccordionTemplate from '../AccordionTemplate/AccordionTemplate';
 
 const MainBuilder = () => {
@@ -36,6 +37,10 @@ const MainBuilder = () => {
             <AccordionTemplate title="Choose Sender">
               <SenderBuilder/>
             </AccordionTemplate>
+
+            {/*<AccordionTemplate title="Settings">
+              <Settings/>
+  </AccordionTemplate>*/}
 
             <AccordionTemplate title="Check and Send">
               <CheckAndSend/>
