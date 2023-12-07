@@ -101,7 +101,7 @@ export async function sendMessages(sendData, sendType, updateProgressBar) {
         credentials: 'same-origin'
     });
     const data = await response.json();
-    updateProgressBar()
+    updateProgressBar(sendData.csvData.length)
     return data.data;
   } catch (error) {
       throw new Error(`sendMessages failed with error message: ${error}`);
@@ -120,7 +120,7 @@ export async function checkNumbers(checkData, updateProgressBar) {
         credentials: 'same-origin'
     });
     const data = await response.json();
-    updateProgressBar()
+    updateProgressBar(checkData.csvData.length)
     return data.data;
   } catch (error) {
       throw new Error(`checkNumbers failed with error message: ${error}`);

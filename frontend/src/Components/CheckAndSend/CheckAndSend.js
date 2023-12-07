@@ -94,7 +94,7 @@ const CheckAndSend = () => {
   const updateProgressBar = (chunk) => {
     dispatch(updateActionState({
       type: ACTION_TYPES.PROGRESS_BAR_COUNT,
-      value: VARIABLES.LOOKUP_CHUNK_SIZE
+      value: chunk
     }))
   }
   
@@ -113,7 +113,7 @@ const CheckAndSend = () => {
         startIndex: chunk.startIndex,
         checkLineType: lineTypeSwitch
       }
-      return await checkNumbers(data, updateProgressBar(VARIABLES.LOOKUP_CHUNK_SIZE));
+      return await checkNumbers(data, updateProgressBar);
     }
 
     const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
@@ -177,7 +177,7 @@ const CheckAndSend = () => {
         ...messagingStructure
       }
 
-      return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard", updateProgressBar(chunkSize));
+      return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard", updateProgressBar);
     }
 
     const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
@@ -188,6 +188,7 @@ const CheckAndSend = () => {
     let failedReceiptsArray = [];
 
     results.forEach((r,index) => {
+      console.log(r)
       if (r.status === 'fulfilled') {
         sentSuccess += r.value.sentSuccess;
         sentErrors += r.value.sentErrors;

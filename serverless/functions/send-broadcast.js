@@ -37,9 +37,8 @@ exports.handler = async function(context, event, callback) {
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
-          console.log(r)
-          console.log(r.status)
           if (r.status === "fulfilled"){
+            console.log(r.value.data)
               sentSuccess += r.value.data.success_count; 
               sentErrors += r.value.data.error_count;
               if(r.value.data.message_receipts && r.value.data.message_receipts.length > 0){
@@ -67,7 +66,7 @@ exports.handler = async function(context, event, callback) {
           }
 
         });
-
+        console.log(messageReceiptsArray)
         response.setBody({
           status: true,
           message: "Messages Sent",

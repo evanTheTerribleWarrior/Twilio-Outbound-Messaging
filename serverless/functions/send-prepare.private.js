@@ -57,8 +57,6 @@ exports.prepareData = (event) => {
         } 
         Messages.push(userObj);  
     })
-    console.log(event)
-    console.log(Messages)
 
     return {
         ...messageData,
