@@ -164,7 +164,7 @@ const CheckAndSend = () => {
 
   const handleSendMessages = async () => {
     if (hasEmptyNumbers()) return;
-    //if (hasDuplicates()) return;
+    if (hasDuplicates()) return;
     const startTime = new Date();
     const chunkSize = broadcastSwitch ? VARIABLES.BROADCAST_API_CHUNK_SIZE : VARIABLES.SMS_API_CHUNK_SIZE;
     const chunks = chunkArray(csvData, chunkSize);
@@ -195,10 +195,18 @@ const CheckAndSend = () => {
         messageReceiptsArray = messageReceiptsArray.concat(r.value.messageReceiptsArray)
         failedReceiptsArray = failedReceiptsArray.concat(r.value.failedReceiptsArray)
 
+        console.log(r.value.failedToSend)
+
+        const resultsForState = {
+          messageReceiptsArray: messageReceiptsArray,
+          failedReceiptsArray: failedReceiptsArray
+        }
+
         dispatch(updateMessagingState({
           type: MESSAGING_TYPES.UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND,
-          value: r.value.messageReceiptsArray
+          value: resultsForState
         }))
+        
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }

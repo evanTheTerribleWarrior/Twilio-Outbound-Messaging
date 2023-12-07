@@ -56,9 +56,26 @@ import { MESSAGING_TYPES } from '../../Utils/variables';
               break;
               
             case MESSAGING_TYPES.UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND:
+              const { messageReceiptsArray, failedReceiptsArray } = action.payload.value;
+
+              console.log(failedReceiptsArray)
+
               state.sendResultsArray = state.sendResultsArray.map(row => {
-                const result = action.payload.value.find(r => r.csvRowID === row.csvRowID);
-                return result ? { ...row, messageSid: result.messageSid } : row;
+                let result = messageReceiptsArray.find(r => r.csvRowID === row.csvRowID);
+                if (result){
+                  return { ...row, messageSid: result.messageSid }
+                }
+                else {
+                  result = failedReceiptsArray.find(r => r.csvRowID === row.csvRowID);
+                  console.log(result)
+                  if (result) 
+                    return { 
+                      ...row, 
+                      error: {...row.error, errorCode: result.errorCode, errorMessage: result.errorMessage},
+                      status: "failed"
+                    }
+                }
+                return row;
               });
               break;
         }

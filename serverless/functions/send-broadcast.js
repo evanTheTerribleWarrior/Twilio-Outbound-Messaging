@@ -32,8 +32,11 @@ exports.handler = async function(context, event, callback) {
 
       let messageReceiptsArray = []
       let failedReceiptsArray = []
+      let failedToSend = {}
       let sentSuccess = 0;
       let sentErrors = 0;
+
+      const {startIndex, csvData, phoneNumberColumn} = event;
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
@@ -43,30 +46,32 @@ exports.handler = async function(context, event, callback) {
               sentErrors += r.value.data.error_count;
               if(r.value.data.message_receipts && r.value.data.message_receipts.length > 0){
                 r.value.data.message_receipts.map(receipt => {
+                  let match = sendPrepare.getCorrectIndex(csvData, phoneNumberColumn, receipt.to)
                   messageReceiptsArray.push({
-                    csvRowID: event.csvData[index].UniqueID,
+                    csvRowID: event.csvData[match].UniqueID,
                     messageSid: receipt.sid,
-                    csvDataIndex: index
                   })
                 })
               }   
               if(r.value.data.failed_message_receipts && r.value.data.failed_message_receipts.length > 0){
                 r.value.data.failed_message_receipts.map(receipt => {
+                  let match = sendPrepare.getCorrectIndex(csvData, phoneNumberColumn, receipt.to)
                   failedReceiptsArray.push({
-                    csvRowID: event.csvData[index].UniqueID,
-                    error_code: receipt.error_code,
-                    error_message: receipt.error_message,
-                    csvDataIndex: index
+                    csvRowID: event.csvData[match].UniqueID,
+                    errorCode: receipt.error_code,
+                    errorMessage: receipt.error_message,
                   })
                 })
               }        
           } 
           else { 
-            //sentErrors++       
+            failedToSend = {
+              ...r.reason.response.data
+            } 
           }
 
         });
-        console.log(messageReceiptsArray)
+        console.log(failedReceiptsArray)
         response.setBody({
           status: true,
           message: "Messages Sent",
@@ -74,7 +79,8 @@ exports.handler = async function(context, event, callback) {
             sentSuccess: sentSuccess,
             sentErrors: sentErrors,
             messageReceiptsArray: messageReceiptsArray,
-            failedReceiptsArray: failedReceiptsArray
+            failedReceiptsArray: failedReceiptsArray,
+            failedToSend: failedToSend
           }
         })
         return callback(null, response);

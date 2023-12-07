@@ -91,7 +91,6 @@ export async function sendMessages(sendData, sendType, updateProgressBar) {
   try {
     const endpoint = sendType === "broadcast" ? API_URLS.SEND_BROADCAST_API : API_URLS.SEND_SMS_API
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + endpoint 
-    console.log(sendData)
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(sendData),
@@ -130,7 +129,6 @@ export async function checkNumbers(checkData, updateProgressBar) {
 export async function getMessageStatus(getData) {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_MESSAGE_STATUS    
-    console.log(getData)
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(getData),

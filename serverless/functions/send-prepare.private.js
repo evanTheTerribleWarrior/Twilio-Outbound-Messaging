@@ -58,12 +58,35 @@ exports.prepareData = (event) => {
         Messages.push(userObj);  
     })
 
+    console.log(Messages)
+
     return {
         ...messageData,
         Messages
     }
 
 }
+
+exports.getCorrectIndex = (csvData, phoneNumberColumn, userNumber) => {
+
+    if(userNumber.startsWith("whatsapp:") || userNumber.startsWith("messenger:")){
+      userNumber = userNumber.split(":")[1]
+    }
+    if(userNumber.startsWith("+")){
+      userNumber = userNumber.split("+")[1]
+    }
+    const match = csvData.findIndex(r => {
+      let csvDataUserNumber = ""
+      if(r[phoneNumberColumn].startsWith("+")){
+        csvDataUserNumber = r[phoneNumberColumn].split("+")[1]
+      }
+      else {
+        csvDataUserNumber = r[phoneNumberColumn]
+      }
+       return csvDataUserNumber === userNumber
+    });
+    return match;
+  }
 
 
 const buildContentVariables = (templateVariables, csvRow) => {
