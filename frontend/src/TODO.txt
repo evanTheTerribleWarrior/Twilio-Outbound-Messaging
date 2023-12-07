@@ -5,9 +5,12 @@ CampaignTable:
 Check and Send:
 - Add "Sending/Checking please wait" message
 - Handle error in promises
+- Scheduling not done
+- Ignore duplicates?
 
 Logs:
 - Update logs for all the use cases
+- lOGS start with /n/n
 
 Generic:
 - Allow local files to be added as Media URL?

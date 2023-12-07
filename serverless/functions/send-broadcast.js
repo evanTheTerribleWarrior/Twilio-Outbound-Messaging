@@ -37,7 +37,7 @@ exports.handler = async function(context, event, callback) {
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
-          console.log(r.value.data)
+          console.log(r)
           console.log(r.status)
           if (r.status === "fulfilled"){
               sentSuccess += r.value.data.success_count; 

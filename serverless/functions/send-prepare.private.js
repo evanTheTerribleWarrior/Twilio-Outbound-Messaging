@@ -30,8 +30,17 @@ exports.prepareData = (event) => {
         if(channelSelection === "SMS" || channelSelection === "Whatsapp"){
             if (!phoneNumber.startsWith('+')) phoneNumber = `+${phoneNumber}`
         }
-        userObj['to'] = channelSelection === "Whatsapp" ? `whatsapp:${phoneNumber}`: `${phoneNumber}`
-        userObj['to'] = channelSelection === "FBM" ? `messenger:${phoneNumber}`: `${phoneNumber}`
+        userObj['to'] = ""
+        switch (channelSelection){
+            case "Whatsapp":
+                userObj['to'] = `whatsapp:${phoneNumber}`
+                break;
+            case "FBM":
+                userObj['to'] = `messenger:${phoneNumber}`
+                break;
+            case "SMS":
+                userObj['to'] = `${phoneNumber}`
+        }
 
         if(messageTypeSelection === "Custom") {
           let body = event.customMessage;
@@ -48,6 +57,8 @@ exports.prepareData = (event) => {
         } 
         Messages.push(userObj);  
     })
+    console.log(event)
+    console.log(Messages)
 
     return {
         ...messageData,

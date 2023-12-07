@@ -40,6 +40,7 @@ exports.handler = function(context, event, callback) {
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
+          console.log(r)
           if (r.status === "fulfilled"){
               sentSuccess++;
               messageReceiptsArray.push({
