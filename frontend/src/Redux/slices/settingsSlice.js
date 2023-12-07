@@ -10,11 +10,11 @@ import { SETTINGS_TYPES } from '../../Utils/variables';
     checkBroadcastAPI: false,
     enableGraph: false,
     limits: {
-      lookupChunk: 50,
-      broadcastChunk: 100,
-      standardAPIChunk: 50,
+      lookupChunkSize: 50,
+      broadcastChunkSize: 100,
+      standardAPIChunkSize: 50,
       browserConcurrency: 5,
-      getStatusChunk: 50
+      getStatusChunkSize: 50
     }
   };
   
@@ -44,6 +44,8 @@ import { SETTINGS_TYPES } from '../../Utils/variables';
                 break;
             case SETTINGS_TYPES.ENABLE_GRAPH:
                 state.enableGraph = action.payload.value
+                case SETTINGS_TYPES.LIMITS:
+                state.limits = action.payload.value
         }
       }
     },

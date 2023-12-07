@@ -20,7 +20,8 @@ export const SETTINGS_TYPES = {
   OPT_OUT_SWITCH: 'optOutSwitch',
   SCHEDULE_SWITCH: 'scheduleSwitch',
   BROADCAST_SWITCH: 'broadcastSwitch',
-  ENABLE_GRAPH: 'enableGraph'
+  ENABLE_GRAPH: 'enableGraph',
+  LIMITS: 'limits'
 }
 
 export const CSVDATA_TYPES = {

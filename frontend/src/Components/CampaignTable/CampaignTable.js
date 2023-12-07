@@ -35,7 +35,6 @@ import { updateMessagingState } from '../../Redux/slices/messagingSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { CSVDATA_TYPES, MESSAGING_TYPES, SETTINGS_TYPES, ACTION_TYPES } from '../../Utils/variables';
-import { VARIABLES } from '../../Utils/variables';
 import { chunkArray, processChunksInBatches, getMessageStatus } from '../../Utils/functions';
 
 const in_progress_statuses = ["accepted", "queued", "sent", "sending"]
@@ -50,6 +49,7 @@ const CampaignTable = (props) => {
   const customMessage = useSelector(state => state.messagingStructure.customMessage)
   const lookupDataForLogs = useSelector(state => state.actionStructure.lookupDataForLogs)
   const checkLineType = useSelector(state => state.settingsStructure.checkLineType)
+  const limits = useSelector(state => state.settingsStructure.limits)
   const dispatch = useDispatch()
 
   const [editIdx, setEditIdx] = useState(-1);
@@ -65,7 +65,7 @@ const CampaignTable = (props) => {
   const handleGetStatus = async () => {
 
     const startTime = new Date();
-    const chunkSize = VARIABLES.GET_STATUS_CHUNK_SIZE;
+    const chunkSize = limits.getStatusChunkSize;
     const chunks = chunkArray(sendResultsArray, chunkSize);
 
     console.log(chunks)
@@ -78,7 +78,7 @@ const CampaignTable = (props) => {
       return await getMessageStatus(data);
     }
 
-    const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
+    const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
 
     results.forEach((r,index) => {
       if (r.status === 'fulfilled') {

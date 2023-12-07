@@ -1,13 +1,12 @@
 CampaignTable:
 - When I go to the last page, if I go back to another page it breaks
-- Update status as we get it?
 
 Check and Send:
-- Add "Sending/Checking please wait" message
+- Add "Sending/Checking please wait" message or PROGRESS BAR
 - Handle error in promises
 - Scheduling not done
-- Ignore duplicates?
 - Download results?
+- Review exponential backoff for browser level
 
 Logs:
 - Update logs for all the use cases

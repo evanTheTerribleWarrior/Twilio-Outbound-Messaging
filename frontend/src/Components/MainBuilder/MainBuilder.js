@@ -38,9 +38,9 @@ const MainBuilder = () => {
               <SenderBuilder/>
             </AccordionTemplate>
 
-            {/*<AccordionTemplate title="Settings">
+            <AccordionTemplate title="Settings">
               <Settings/>
-  </AccordionTemplate>*/}
+            </AccordionTemplate>
 
             <AccordionTemplate title="Check and Send">
               <CheckAndSend/>

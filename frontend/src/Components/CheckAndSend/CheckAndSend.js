@@ -3,7 +3,7 @@ import { useSelector, useDispatch} from 'react-redux'
 import { Button, Stack, Box, FormControlLabel, Switch, Alert, IconButton, AlertTitle } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ProTip from '../ProTip/ProTip';
-import { ACTION_TYPES, VARIABLES, SETTINGS_TYPES, MESSAGING_TYPES, CSVDATA_TYPES } from '../../Utils/variables';
+import { ACTION_TYPES, SETTINGS_TYPES, MESSAGING_TYPES, CSVDATA_TYPES } from '../../Utils/variables';
 import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices } from '../../Utils/functions';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
@@ -21,6 +21,7 @@ const CheckAndSend = () => {
   const messagingStructure = useSelector(state => state.messagingStructure)
   const broadcastSwitch = useSelector(state => state.settingsStructure.checkBroadcastAPI)
   const lineTypeSwitch = useSelector(state => state.settingsStructure.checkLineType)
+  const limits = useSelector(state => state.settingsStructure.limits)
 
   const [broadcastAlertClicked, setBroadcastAlert] = useState(false);
   const [lineTypeAlertClicked, setLineTypeAlert] = useState(false);
@@ -103,7 +104,7 @@ const CheckAndSend = () => {
     //if (hasDuplicates()) return;
 
     const startTime = new Date();
-    const chunkSize = VARIABLES.LOOKUP_CHUNK_SIZE;
+    const chunkSize = limits.lookupChunkSize;
     const chunks = chunkArray(csvData, chunkSize);
 
     const processChunk = async (chunk) => {
@@ -116,7 +117,7 @@ const CheckAndSend = () => {
       return await checkNumbers(data, updateProgressBar);
     }
 
-    const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
+    const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
 
     let checkedSuccess = 0;
     let checkedErrors = 0;
@@ -166,7 +167,7 @@ const CheckAndSend = () => {
     if (hasEmptyNumbers()) return;
     if (hasDuplicates()) return;
     const startTime = new Date();
-    const chunkSize = broadcastSwitch ? VARIABLES.BROADCAST_API_CHUNK_SIZE : VARIABLES.SMS_API_CHUNK_SIZE;
+    const chunkSize = broadcastSwitch ? limits.broadcastChunkSize : limits.standardAPIChunkSize;
     const chunks = chunkArray(csvData, chunkSize);
 
     const processChunk = async (chunk) => {
@@ -180,7 +181,7 @@ const CheckAndSend = () => {
       return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard", updateProgressBar);
     }
 
-    const results = await processChunksInBatches(chunks, processChunk, VARIABLES.BROWSER_CONCURRENCY_LIMIT);
+    const results = await processChunksInBatches(chunks, processChunk, limtis.browserConcurrency);
 
     let sentSuccess = 0;
     let sentErrors = 0;
