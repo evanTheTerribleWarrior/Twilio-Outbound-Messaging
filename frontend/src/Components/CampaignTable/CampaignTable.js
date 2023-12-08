@@ -296,17 +296,12 @@ const CampaignTable = (props) => {
 
   const handleChangePage = (event, page) => {
     setPage(parseInt(page, 10))
+    setCurrent(page * rowsPerPage)
   };
   
   const handleChangeRowsPerPage = (event) => {
-    if(event.target.value === 'All'){
-      setRowsPerPage(-1)
-      setPage(0)
-    }
-    else{
       setRowsPerPage(parseInt(event.target.value, 10))
       setPage(0)
-    }
   };
 
   const handleFindRowChange = (event) => {
@@ -394,7 +389,6 @@ const CampaignTable = (props) => {
 ).map((row, i) => 
             
             (<>
-            
             <TableRow
                 key={`tr-${csvData[i].UniqueID}`}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

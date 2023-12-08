@@ -1,6 +1,3 @@
-CampaignTable:
-- When I go to the last page, if I go back to another page it breaks
-
 Check and Send:
 - Add "Sending/Checking please wait" message or PROGRESS BAR
 - Handle error in promises
