@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
-import { CSVDATA_TYPES } from '../../Utils/variables';
+import { CSVDATA_TYPES, COMMON } from '../../Utils/variables';
 
   const initialState = {
     csvData: [],
@@ -23,6 +23,8 @@ import { CSVDATA_TYPES } from '../../Utils/variables';
           case CSVDATA_TYPES.CSV_SELECTED_COLUMN:
             state.csvSelectedColumn = action.payload.value
             break;
+          case COMMON.RESET_STATE:
+            return initialState;
         }
       }
     

@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
-import { SETTINGS_TYPES } from '../../Utils/variables';
+import { SETTINGS_TYPES, COMMON } from '../../Utils/variables';
 
   const initialState = {
     checkLineType: false,
@@ -44,8 +44,12 @@ import { SETTINGS_TYPES } from '../../Utils/variables';
                 break;
             case SETTINGS_TYPES.ENABLE_GRAPH:
                 state.enableGraph = action.payload.value
+                break;
                 case SETTINGS_TYPES.LIMITS:
                 state.limits = action.payload.value
+                break;
+                case COMMON.RESET_STATE:
+                  return initialState
         }
       }
     },

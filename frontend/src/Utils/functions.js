@@ -192,4 +192,17 @@ export const findDuplicatePhoneIndices = (csvData) => {
   return duplicates;
 }
 
+export const convertToCSV = (arr) => {
+  const array = [Object.keys(arr[0])].concat(arr);
+  return array.map(it => {
+    return Object.values(it).toString();
+  }).join('\n');
+}
 
+export const downloadCSV = (csvContent, filename) => {
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}

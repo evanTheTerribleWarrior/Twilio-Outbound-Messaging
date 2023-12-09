@@ -4,17 +4,14 @@ Check and Send:
 - Scheduling not done
 - Download results?
 - Review exponential backoff for browser level
+- Do not retry delivered
 
 Logs:
 - Update logs for all the use cases
-- lOGS start with /n/n
 
 Generic:
-- Allow local files to be added as Media URL?
-- Check if hashrouter needed when deploying to twilio account for routing?
 - Send results to webhook?
-- Make concurrency and batch limits configurable?
-- Reset state when loading new file
 
 Future:
 - Add GBM?
+- Allow local files to be added as Media URL?

@@ -181,7 +181,7 @@ const CheckAndSend = () => {
       return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard", updateProgressBar);
     }
 
-    const results = await processChunksInBatches(chunks, processChunk, limtis.browserConcurrency);
+    const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
 
     let sentSuccess = 0;
     let sentErrors = 0;

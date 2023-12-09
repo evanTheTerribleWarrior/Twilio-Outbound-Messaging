@@ -56,10 +56,6 @@ export const ACTION_TYPES = {
   PROGRESS_BAR_COUNT: 'progressBarCount'
 }
 
-export const VARIABLES = {
-  LOOKUP_CHUNK_SIZE : 50,
-  BROWSER_CONCURRENCY_LIMIT: 5,
-  SMS_API_CHUNK_SIZE: 50,
-  BROADCAST_API_CHUNK_SIZE: 100,
-  GET_STATUS_CHUNK_SIZE: 50
+export const COMMON = {
+  RESET_STATE: 'resetState'
 }

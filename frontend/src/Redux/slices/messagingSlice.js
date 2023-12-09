@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { MESSAGING_TYPES } from '../../Utils/variables';
+import { MESSAGING_TYPES, COMMON } from '../../Utils/variables';
 
   const initialState = {
     channelSelection: "SMS",
@@ -78,6 +78,8 @@ import { MESSAGING_TYPES } from '../../Utils/variables';
                 return row;
               });
               break;
+              case COMMON.RESET_STATE:
+                return initialState
         }
       }
     },

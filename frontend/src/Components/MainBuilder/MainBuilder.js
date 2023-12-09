@@ -12,6 +12,7 @@ import CampaignTable from '../CampaignTable/CampaignTable';
 import CheckAndSend from '../CheckAndSend/CheckAndSend';
 import Settings from '../Settings/Settings';
 import AccordionTemplate from '../AccordionTemplate/AccordionTemplate';
+import ResultsExports from '../ResultsExport/ResultsExport';
 
 const MainBuilder = () => {
   const csvColumnFields = useSelector((state) => state.csvDataStructure.csvColumnFields);
@@ -44,6 +45,10 @@ const MainBuilder = () => {
 
             <AccordionTemplate title="Check and Send">
               <CheckAndSend/>
+            </AccordionTemplate>
+
+            <AccordionTemplate title="Export Results">
+              <ResultsExports/>
             </AccordionTemplate>
       
           </FormControl>

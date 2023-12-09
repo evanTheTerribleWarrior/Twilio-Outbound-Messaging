@@ -7,8 +7,10 @@ import Box from '@mui/material/Box';
 import Papa from "papaparse";
 import { v4 as uuidv4 } from 'uuid';
 import { updateCSVState } from '../../Redux/slices/csvDataSlice';
-import { CSVDATA_TYPES, MESSAGING_TYPES } from '../../Utils/variables';
+import { ACTION_TYPES, CSVDATA_TYPES, MESSAGING_TYPES, COMMON } from '../../Utils/variables';
 import { updateMessagingState } from '../../Redux/slices/messagingSlice';
+import { updateActionState } from '../../Redux/slices/actionSlice';
+import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 
 const FileLoader = (props) => {
 
@@ -42,13 +44,24 @@ const FileLoader = (props) => {
                 setIsSelected(false);
 
               } else {
-                dispatch(updateCSVState({
-                  type: CSVDATA_TYPES.ALL_CSV_DATA,
-                  value: []
+                dispatch(updateMessagingState({
+                  type: COMMON.RESET_STATE,
+                  value: ""
                 }))
+           
+                dispatch(updateActionState({
+                  type: COMMON.RESET_STATE,
+                  value: ""
+                }))
+          
                 dispatch(updateCSVState({
-                  type: CSVDATA_TYPES.CSV_COLUMN_FIELDS,
-                  value: []
+                  type: COMMON.RESET_STATE,
+                  value: ""
+                }))
+          
+                dispatch(updateSettingsState({
+                  type: COMMON.RESET_STATE,
+                  value: ""
                 }))
                 setCSVParsed(true);
                 setCSVErrors(false);
@@ -85,7 +98,7 @@ const FileLoader = (props) => {
                   type: MESSAGING_TYPES.SEND_RESULTS_ARRAY,
                   value: arr
                 }))
-                //setCSVData(result.data)   
+                
                 
               }
 

@@ -7,6 +7,11 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { updateCSVState } from '../../Redux/slices/csvDataSlice';
+import { updateMessagingState } from '../../Redux/slices/messagingSlice';
+import { updateActionState } from '../../Redux/slices/actionSlice';
+import { updateSettingsState } from '../../Redux/slices/settingsSlice';
+import { COMMON } from '../../Utils/variables';
 
 const MainAppBar = () => {
 
@@ -16,6 +21,25 @@ const MainAppBar = () => {
 
   const handleLogout = async () => {
     if(isAuthenticated){
+      dispatch(updateMessagingState({
+        type: COMMON.RESET_STATE,
+        value: ""
+      }))
+ 
+      dispatch(updateActionState({
+        type: COMMON.RESET_STATE,
+        value: ""
+      }))
+
+      dispatch(updateCSVState({
+        type: COMMON.RESET_STATE,
+        value: ""
+      }))
+
+      dispatch(updateSettingsState({
+        type: COMMON.RESET_STATE,
+        value: ""
+      }))
       dispatch(logout(isAuthenticated))
       const res = await removeJWT();
       console.log(res)
