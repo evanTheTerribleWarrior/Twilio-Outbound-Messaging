@@ -2,16 +2,18 @@ Check and Send:
 - Add "Sending/Checking please wait" message or PROGRESS BAR
 - Handle error in promises
 - Scheduling not done
-- Download results?
 - Review exponential backoff for browser level
 - Do not retry delivered
+- Put text under the Selected column if check or send are clicked and there is no column set
 
 Logs:
 - Update logs for all the use cases
 
-Generic:
-- Send results to webhook?
+General:
+- Uncomment handle duplicates after tests
+- Bring the prepare data function in the frontend?
 
 Future:
 - Add GBM?
 - Allow local files to be added as Media URL?
+- Bulk Lookup

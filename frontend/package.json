@@ -14,7 +14,7 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "^5.6.1",
     "@mui/material": "latest",
-    "@mui/x-data-grid": "^5.10.0",
+    "@mui/x-data-grid": "^5.17.26",
     "@reduxjs/toolkit": "^1.9.7",
     "@webscopeio/react-textarea-autocomplete": "^4.9.1",
     "date-fns": "^2.30.0",

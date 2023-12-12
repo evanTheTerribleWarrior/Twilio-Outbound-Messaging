@@ -27,7 +27,11 @@ export const SETTINGS_TYPES = {
 export const CSVDATA_TYPES = {
   ALL_CSV_DATA : 'allCSVData',
   CSV_COLUMN_FIELDS: 'csvColumnFields',
-  CSV_SELECTED_COLUMN: 'csvSelectedColumn'
+  CSV_SELECTED_COLUMN: 'csvSelectedColumn',
+  DELETE_ROW: 'deleteRow',
+  UPDATE_DATA_CHUNK: 'updateDataChunk',
+  UPDATE_ROW: 'updateRow',
+  ADD_ROW: 'addRow'
 }
 
 export const MESSAGING_TYPES = {
@@ -43,6 +47,11 @@ export const MESSAGING_TYPES = {
   SCHEDULED_DATE: 'scheduledDate',
   SEND_RESULTS_ARRAY: 'sendResultsArray',
   UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND: 'sendResultsArrayUpdateAfterSend',
+  UPDATE_DATA_CHUNK: 'updateDataChunk',
+  DELETE_ROW: 'deleteRow',
+  UPDATE_ROW: 'updateRow',
+  ADD_ROW: 'addRow',
+  UPDATE_STATUS_CHUNK: 'updateStatusChunk'
   
 }
 

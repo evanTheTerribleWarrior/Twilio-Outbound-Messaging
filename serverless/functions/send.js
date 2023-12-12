@@ -37,21 +37,22 @@ exports.handler = function(context, event, callback) {
       let sentErrors = 0;
       let messageReceiptsArray = []
       let failedReceiptsArray = []
-      const { startIndex } = event;
+      const { csvData } = event;
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
+
           if (r.status === "fulfilled"){
               sentSuccess++;
               messageReceiptsArray.push({
-                csvRowID: event.csvData[startIndex + index].UniqueID,
+                csvRowID: csvData[index].UniqueID,
                 messageSid: r.value.sid
               })
           } 
           else { 
             sentErrors++;   
             failedReceiptsArray.push({
-              csvRowID: event.csvData[startIndex + index].UniqueID,
+              csvRowID: csvData[index].UniqueID,
               errorCode: r.reason.code,
               errorMessage: r.reason.moreInfo,
               status: "failed"
@@ -59,7 +60,6 @@ exports.handler = function(context, event, callback) {
           }
 
         });
-        console.log(failedReceiptsArray)
 
         response.setBody({
           status: true,

@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { Box, Grid } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -41,18 +42,19 @@ const in_progress_statuses = ["accepted", "queued", "sent", "sending"]
 const failed_statuses = ["undelivered", "failed"]
 const PlaceholderIcon = () => <HourglassEmptyIcon color="action" />;
 
-const CampaignTable = (props) => {
+const CampaignTable = () => {
 
   const csvData = useSelector(state => state.csvDataStructure.csvData)
+  const csvColumnFields = useSelector(state => state.csvDataStructure.csvColumnFields)
   const phoneNumberColumn = useSelector(state => state.csvDataStructure.csvSelectedColumn)
   const sendResultsArray = useSelector(state => state.messagingStructure.sendResultsArray)
   const customMessage = useSelector(state => state.messagingStructure.customMessage)
   const lookupDataForLogs = useSelector(state => state.actionStructure.lookupDataForLogs)
-  const checkLineType = useSelector(state => state.settingsStructure.checkLineType)
   const limits = useSelector(state => state.settingsStructure.limits)
   const dispatch = useDispatch()
 
   const [editIdx, setEditIdx] = useState(-1);
+  const [editRow, setEditRow] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [findRowNumber, setFindRowNumber] = useState(0);
@@ -68,8 +70,6 @@ const CampaignTable = (props) => {
     const chunkSize = limits.getStatusChunkSize;
     const chunks = chunkArray(sendResultsArray, chunkSize);
 
-    console.log(chunks)
-
     const processChunk = async (chunk) => {
       const data = {
         sendResultsArray: chunk.chunkData,
@@ -81,15 +81,18 @@ const CampaignTable = (props) => {
     const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
 
     results.forEach((r,index) => {
+      console.log(r)
       if (r.status === 'fulfilled') {
         dispatch(updateMessagingState({
-          type: MESSAGING_TYPES.SEND_RESULTS_ARRAY,
+          type: MESSAGING_TYPES.UPDATE_STATUS_CHUNK,
           value: r.value.sendResultsArray
         }))
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
     });
+
+    console.log(sendResultsArray)
 
     dispatch(updateSettingsState({
       type: SETTINGS_TYPES.ENABLE_GRAPH,
@@ -118,11 +121,9 @@ const CampaignTable = (props) => {
     for (let i = 0; i < cols.length; i++){    
       cols[i] === "UniqueID" ? new_row[cols[i]] = uuidv4() : new_row[cols[i]] = ""
     }
-    const newCsvData = [...csvData];
-    newCsvData.unshift(new_row)
     dispatch(updateCSVState({
-      type: CSVDATA_TYPES.ALL_CSV_DATA,
-      value: newCsvData
+      type: CSVDATA_TYPES.ADD_ROW,
+      value: new_row
     }));
 
     if(sendResultsArray.length > 0){
@@ -134,11 +135,9 @@ const CampaignTable = (props) => {
       obj["error"]["errorLink"] = ""
       obj["status"] = ""
       obj["csvRowID"] = new_row.UniqueID
-      const newSendResultsArray = [...sendResultsArray];
-      newSendResultsArray.unshift(obj)
       dispatch(updateMessagingState({
-        type: MESSAGING_TYPES.SEND_RESULTS_ARRAY,
-        value: newSendResultsArray
+        type: MESSAGING_TYPES.ADD_ROW,
+        value: obj
       }));
       obj = {}
     }
@@ -153,48 +152,40 @@ const CampaignTable = (props) => {
     }))
   }
  
-  const startEditing = (i) => {
+  const startEditing = (i, row) => {
     setEditIdx(i);
-    console.log("Editing row " + i)
+    setEditRow(row)
   };
 
   const stopEditing = () => {
-    setEditIdx(-1);
     dispatch(updateCSVState({
-      type: CSVDATA_TYPES.ALL_CSV_DATA,
-      value: csvData
+      type: CSVDATA_TYPES.UPDATE_ROW,
+      value: editRow
     }));
+    setEditIdx(-1);
   };
 
-  const handleEditing = (e, name, i) => {
-    let value = "";
-    
-    if(name === phoneNumberColumn)
-      value = e.target.value.trim().replace(/\s+/g, '')
-    else value = e.target.value
-    
-    const updatedCsvData = csvData.map((row, j) => 
-      j === i ? { ...row, [name]: value } : row
-    );
-
-    dispatch(updateCSVState({
-      type: CSVDATA_TYPES.ALL_CSV_DATA,
-      value: updatedCsvData
+  const handleEditing = (e, name) => {
+    const value = name === phoneNumberColumn
+      ? e.target.value.trim().replace(/\s+/g, '')
+      : e.target.value;
+  
+    setEditRow(prevRow => ({
+      ...prevRow,
+      [name]: value
     }));
   };
 
 
   const handleRemove = (i) => {
-    const updatedCsvData = csvData.filter((row, j) => j !== i)
     dispatch(updateCSVState({
-      type: CSVDATA_TYPES.ALL_CSV_DATA,
-      value: updatedCsvData
+      type: CSVDATA_TYPES.DELETE_ROW,
+      value: i
     }));
 
-    const updatedResultsArray = sendResultsArray.filter((row, j) => j !== i)
     dispatch(updateMessagingState({
-      type: MESSAGING_TYPES.SEND_RESULTS_ARRAY,
-      value: updatedResultsArray
+      type: MESSAGING_TYPES.DELETE_ROW,
+      value: i
     }));
  };
 
@@ -322,79 +313,18 @@ const CampaignTable = (props) => {
     setPage(Math.floor(rowNumber/rowsPerPage))
   }
 
+
+  const renderRow = (row, index) => {
+
+    const currentRowIndex = current + index;
+
     return (
-      <>
-      
-      <Typography variant="h5" component="h1" gutterBottom>
-        User Data
-      </Typography>
-
-      
-      <Stack direction="row" spacing={2}>
-        <Button variant="outlined" startIcon={<AddIcon />} onClick = {() => addRowClick()}>Add Row</Button>
-        <FormControl sx={{ m: 1, width: '20ch' }} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-find">Find Row</InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-find-row"
-              type={'number'}
-              value={findRowNumber}
-              onChange={e => handleFindRowChange(e)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="find row"
-                    onClick={() => handleClickFindRow(findRowNumber)}
-                    onMouseDown={(e) => handleMouseDownFindRow(e)}
-                    edge="start"
-                  >
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Find Row"
-            />
-          </FormControl>
-        </Stack>
-      <TableContainer component={Paper} style={{ maxHeight: '70vh', border: "1px solid rgba(0,0,0,0.2)", padding: 4 }}>
-        <Table stickyHeader={true} sx={{ tableLayout: "auto"}} style={{"maxHeight": "20vh"}} >
-          <TableHead>
-            <TableRow>
-              <TableCell style={{color: 'grey'}}>ID</TableCell>
-              {Object.keys(csvData[0]).map((col) => (
-                   <>
-                   {
-                     col === "UniqueID" ? "" :
-                     (<TableCell 
-                      key={col} 
-                      style={{cursor: 'pointer'}} 
-                      onClick={ () => handleColumnNameClick(col)}>{col}
-                      </TableCell>)
-                   }
-                   
-                   </>
-              ))}
-              <TableCell style={{color: 'grey'}}>Edit</TableCell>
-              <TableCell style={{color: 'grey'}}>Delete</TableCell>
-              <TableCell style={{color: 'grey'}}>Lookup Status</TableCell>
-              <TableCell ><Button variant="outlined" onClick={handleGetStatus} >Get Message Status</Button></TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-
-          {(
-  rowsPerPage > 0 
-    ? csvData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    : csvData
-).map((row, i) => 
-            
-            (<>
-            <TableRow
-                key={`tr-${csvData[i].UniqueID}`}
+      <TableRow 
+                key={`tr-${row.UniqueID}`}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                  <TableCell>
-                  {csvData.findIndex((element)=> element.UniqueID === row.UniqueID)}
+                  <TableCell style={{ width: '100px' }}>
+                  {currentRowIndex}
                   </TableCell>
 
 
@@ -404,15 +334,15 @@ const CampaignTable = (props) => {
                               {
                                 
                                 col === "UniqueID" ? "" :
-                               (<TableCell key={`tc-${csvData[i].UniqueID}`}>
+                               (<TableCell key={`tc-${row.UniqueID}`} style={{ width: '200px' }}>
                                 
-                               { editIdx === current + i ?
+                               { editIdx === currentRowIndex ?
                                   (
                                     <div>
                                     <TextField
                                       name={row[col]}
-                                      onChange={e => handleEditing(e, col, current + i)}
-                                      value={row[col]}
+                                      onChange={e => handleEditing(e, col, currentRowIndex, row)}
+                                      value={editRow[col] || row[col]}
                                     />
                                     </div>
                                   )
@@ -427,9 +357,9 @@ const CampaignTable = (props) => {
                   ))}
 
 
-                { editIdx === current + i ?
+                { editIdx === currentRowIndex ?
 
-                  (<TableCell  onClick={ () => stopEditing()}>
+                  (<TableCell  onClick={ () => stopEditing()} style={{ width: '100px' }}>
                      <Tooltip title="Stop editing">
                       <IconButton >
                         <CheckIcon />
@@ -439,7 +369,7 @@ const CampaignTable = (props) => {
 
                   :
 
-                   (<TableCell onClick={ () => startEditing(current + i)}>
+                   (<TableCell onClick={ () => startEditing(currentRowIndex, row)} style={{ width: '100px' }}>
                      <Tooltip title="Edit this row">
                       <IconButton >
                         <EditIcon />
@@ -448,7 +378,7 @@ const CampaignTable = (props) => {
                     </TableCell>) 
                 }
                  
-                 <TableCell  onClick={ () => handleRemove(current + i)}>
+                 <TableCell  onClick={ () => handleRemove(currentRowIndex)} style={{ width: '100px' }}>
                    <Tooltip title="Delete this row">
                     <IconButton >
                       <DeleteIcon />
@@ -456,33 +386,33 @@ const CampaignTable = (props) => {
                   </Tooltip>   
                   </TableCell>  
 
-                  <TableCell >
-                  {shouldShowIconLookup(csvData[current + i].UniqueID) ?
+                  <TableCell style={{ width: '100px' }}>
+                  {shouldShowIconLookup(row.UniqueID) ?
                   (<Tooltip
-                  title={showRelevantIconLookup(csvData[current + i].UniqueID).title} 
-                  interactive={showRelevantIconLookup(current + i).interactive ? 1 : 0}>
+                  title={showRelevantIconLookup(row.UniqueID).title} 
+                  interactive={showRelevantIconLookup(currentRowIndex).interactive ? 1 : 0}>
                     <IconButton >
-                      {showRelevantIconLookup(csvData[current + i].UniqueID).icon === "WarningIcon"? <WarningIcon style={{color: showRelevantIconLookup(csvData[current + i].UniqueID).color}} /> : "" }
-                      {showRelevantIconLookup(csvData[current + i].UniqueID).icon === "ErrorIcon"? <ErrorIcon style={{color: showRelevantIconLookup(csvData[current + i].UniqueID).color}} /> : "" }
-                      {showRelevantIconLookup(csvData[current + i].UniqueID).icon === "CheckCircleIcon"? <CheckCircleIcon style={{color: showRelevantIconLookup(csvData[current + i].UniqueID).color}} /> : "" }
+                      {showRelevantIconLookup(row.UniqueID).icon === "WarningIcon"? <WarningIcon style={{color: showRelevantIconLookup(row.UniqueID).color}} /> : "" }
+                      {showRelevantIconLookup(row.UniqueID).icon === "ErrorIcon"? <ErrorIcon style={{color: showRelevantIconLookup(row.UniqueID).color}} /> : "" }
+                      {showRelevantIconLookup(row.UniqueID).icon === "CheckCircleIcon"? <CheckCircleIcon style={{color: showRelevantIconLookup(row.UniqueID).color}} /> : "" }
                     </IconButton>
                   </Tooltip>): <HourglassEmptyIcon/>}
                   </TableCell>
 
-                    <TableCell >
-                      {shouldShowIcon(csvData[current + i].UniqueID) ?
+                    <TableCell style={{ width: '100px' }}>
+                      {shouldShowIcon(row.UniqueID) ?
                       (<Tooltip
-                      title={showRelevantIcon(csvData[current + i].UniqueID).renderTitleJSX ?
+                      title={showRelevantIcon(row.UniqueID).renderTitleJSX ?
                           (<>
-                          Error code: {sendResultsArray[current + i]["error"].errorCode}<br/>
-                          {sendResultsArray[current + i]["error"].errorLink ? (<>For more information please click <a href={sendResultsArray[current + i]["error"]["errorLink"]} target="_blank">HERE</a></>) : (<>For more information please click <a href={"https://twilio.com/docs/api/errors/" + sendResultsArray[current + i]["error"].errorCode} target="_blank">HERE</a></>)}   
+                          Error code: {sendResultsArray[currentRowIndex]["error"].errorCode}<br/>
+                          {sendResultsArray[currentRowIndex]["error"].errorLink ? (<>For more information please click <a href={sendResultsArray[currentRowIndex]["error"]["errorLink"]} target="_blank">HERE</a></>) : (<>For more information please click <a href={"https://twilio.com/docs/api/errors/" + sendResultsArray[currentRowIndex]["error"].errorCode} target="_blank">HERE</a></>)}   
                           </>)
-                        : showRelevantIcon(csvData[current + i].UniqueID).title} 
-                      interactive={showRelevantIcon(current + i).interactive ? 1 : 0}>
+                        : showRelevantIcon(row.UniqueID).title} 
+                      interactive={showRelevantIcon(currentRowIndex).interactive ? 1 : 0}>
                         <IconButton >
-                          {showRelevantIcon(csvData[current + i].UniqueID).icon === "WarningIcon"? <WarningIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
-                          {showRelevantIcon(csvData[current + i].UniqueID).icon === "ErrorIcon"? <ErrorIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
-                          {showRelevantIcon(csvData[current + i].UniqueID).icon === "CheckCircleIcon"? <CheckCircleIcon style={{color: showRelevantIcon(csvData[current + i].UniqueID).color}} /> : "" }
+                          {showRelevantIcon(row.UniqueID).icon === "WarningIcon"? <WarningIcon style={{color: showRelevantIcon(row.UniqueID).color}} /> : "" }
+                          {showRelevantIcon(row.UniqueID).icon === "ErrorIcon"? <ErrorIcon style={{color: showRelevantIcon(row.UniqueID).color}} /> : "" }
+                          {showRelevantIcon(row.UniqueID).icon === "CheckCircleIcon"? <CheckCircleIcon style={{color: showRelevantIcon(row.UniqueID).color}} /> : "" }
                         </IconButton>
                       </Tooltip>) : <PlaceholderIcon/> 
                        } 
@@ -491,25 +421,99 @@ const CampaignTable = (props) => {
                  
                   
               </TableRow>  
-          </>))}
-          </TableBody>
-          <TableFooter>
-    <TableRow>
-      <TablePagination
-        count={csvData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(e,p) => handleChangePage(e,p)}
-        onRowsPerPageChange={(e) => handleChangeRowsPerPage(e)}
-        rowsPerPageOptions={[10, 25, 50, 100]}
-      />
-    </TableRow>
-  </TableFooter>
-        </Table>
-                </TableContainer>
-      </>
-   
-                )
+    )
+  }
+  
+
+  const renderHeader = () => {
+
+    return (
+      <TableHead>
+          <TableRow>
+            <TableCell style={{color: 'grey', width: '100px'}}>ID</TableCell>
+            {Object.keys(csvData[0]).map((col) => (
+                 <>
+                 {
+                   col === "UniqueID" ? "" :
+                   (<TableCell 
+                    key={col} 
+                    style={{cursor: 'pointer', width: '200px'}} 
+                    onClick={ () => handleColumnNameClick(col)}>{col}
+                    </TableCell>)
+                 }
+                 
+                 </>
+            ))}
+            <TableCell style={{color: 'grey', width: '100px'}}>Edit</TableCell>
+            <TableCell style={{color: 'grey', width: '100px'}}>Delete</TableCell>
+            <TableCell style={{color: 'grey', width: '100px'}}>Lookup Status</TableCell>
+            <TableCell style={{width: '100px'}}><Button variant="outlined" onClick={handleGetStatus} >Get Message Status</Button></TableCell>
+          </TableRow>
+        </TableHead>
+        )
+
+  }
+      
+  return (
+    <>
+    
+    <Typography variant="h5" component="h1" gutterBottom>
+      User Data
+    </Typography>
+
+    
+    <Stack direction="row" spacing={2}>
+      <Button variant="outlined" startIcon={<AddIcon />} onClick = {() => addRowClick()}>Add Row</Button>
+      <FormControl sx={{ m: 1, width: '20ch' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-find">Find Row</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-find-row"
+            type={'number'}
+            value={findRowNumber}
+            onChange={e => handleFindRowChange(e)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="find row"
+                  onClick={() => handleClickFindRow(findRowNumber)}
+                  onMouseDown={(e) => handleMouseDownFindRow(e)}
+                  edge="start"
+                >
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Find Row"
+          />
+        </FormControl>
+      </Stack>
+    <TableContainer component={Paper} style={{ maxHeight: '70vh', border: "1px solid rgba(0,0,0,0.2)", padding: 4}}>
+      <Table stickyHeader={true}  >
+        
+          {renderHeader()}
+        <TableBody>
+        
+        {(csvData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)).map((row, index) => 
+            <>{renderRow(row,index)}</>
+        )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              count={csvData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={(e,p) => handleChangePage(e,p)}
+              onRowsPerPageChange={(e) => handleChangeRowsPerPage(e)}
+              rowsPerPageOptions={[10, 25, 50, 100]}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+              </TableContainer>
+    </>
+ 
+              )
                 
 }
 

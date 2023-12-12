@@ -25,7 +25,7 @@ const MainBuilder = () => {
         <Grid item xs={4}>
           <FormControl fullWidth>
             <FileLoader/>
-            { csvColumnFields.length > 0 && <NumberColumnSelection/> }
+            { csvColumnFields && csvColumnFields.length > 0 && <NumberColumnSelection/> }
             
             <AccordionTemplate title="Select Channel">
               <ChannelSelection/>

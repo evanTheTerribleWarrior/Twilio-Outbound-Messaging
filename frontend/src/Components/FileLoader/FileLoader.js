@@ -19,89 +19,89 @@ const FileLoader = (props) => {
   const [csvParsed, setCSVParsed] = useState(false);
   const [csvErrors, setCSVErrors] = useState(false);
   const [columnCount, setColumnCount] = useState(0);
-  const [columnFields, setColumnFields] = useState(undefined);
-  const [csvData, setCSVData] = useState(null)
+  const [columnFields, setColumnFields] = useState(null);
   const [sendCompleted, setSendCompleted] = useState(false)
   const [checkCompleted, setCheckCompleted] = useState(false)
   const [error, setError] = useState(false)
 
-  const csvDataState = useSelector((state) => state.csvDataStructure.csvData);
+  const csvData = useSelector((state) => state.csvDataStructure.csvData);
   const dispatch = useDispatch()
 
-  useEffect(() => {
+  const resetState = () => {
+    dispatch(updateMessagingState({
+      type: COMMON.RESET_STATE,
+      value: ""
+    }))
 
+    dispatch(updateActionState({
+      type: COMMON.RESET_STATE,
+      value: ""
+    }))
+
+
+    dispatch(updateSettingsState({
+      type: COMMON.RESET_STATE,
+      value: ""
+    }))
+
+    dispatch(updateCSVState({
+      type: COMMON.RESET_STATE,
+      value: ""
+    }))
+  }
+
+  useEffect(() => {
+    
     if(selectedFile){
+      
+      resetState()
       Papa.parse(selectedFile, {
           header: true,
           worker: true,
           skipEmptyLines: true,
-          complete: (result) => {
+          dynamicTyping: true,
+          chunk: (results) => {
+              let newCSVData = []
+              setColumnCount(results.meta.fields.length)  
+              setColumnFields(results.meta.fields)
 
-            if (result.errors.length > 0) {
+              dispatch(updateCSVState({
+                type: CSVDATA_TYPES.CSV_COLUMN_FIELDS,
+                value: results.meta.fields
+              }))
 
-                setCSVParsed(false);
-                setCSVErrors(true);
-                setIsSelected(false);
+            if (results.errors.length > 0) {
+              setCSVParsed(false);
+              setCSVErrors(true);
+              setIsSelected(false);
+              console.error('Errors:', results.errors);
+              parser.abort();
+              return;
+            }
 
-              } else {
-                dispatch(updateMessagingState({
-                  type: COMMON.RESET_STATE,
-                  value: ""
-                }))
-           
-                dispatch(updateActionState({
-                  type: COMMON.RESET_STATE,
-                  value: ""
-                }))
-          
-                dispatch(updateCSVState({
-                  type: COMMON.RESET_STATE,
-                  value: ""
-                }))
-          
-                dispatch(updateSettingsState({
-                  type: COMMON.RESET_STATE,
-                  value: ""
-                }))
-                setCSVParsed(true);
-                setCSVErrors(false);
-                setColumnCount(result.meta.fields.length)  
-                setColumnFields(result.meta.fields) 
-                for(let i = 0; i < result.data.length; i++){
-                  result.data[i]["UniqueID"] = uuidv4()
-                }
-                let arr = []
-                let obj = {}
-                for(let i = 0; i < result.data.length; i++){
-                  obj["messageSid"] = ""
-                  obj["error"] = {}
-                  obj["error"]["errorCode"] = ""
-                  obj["error"]["errorMessage"] = ""
-                  obj["error"]["errorLink"] = ""
-                  obj["status"] = ""
-                  obj["csvRowID"] = result.data[i].UniqueID
-                  arr.push(obj)
-                  obj = {}
-                }
-                  
-                dispatch(updateCSVState({
-                  type: CSVDATA_TYPES.CSV_COLUMN_FIELDS,
-                  value: result.meta.fields
-                }))
-                
-                dispatch(updateCSVState({
-                  type: CSVDATA_TYPES.ALL_CSV_DATA,
-                  value: result.data
-                }))
+            
 
-                dispatch(updateMessagingState({
-                  type: MESSAGING_TYPES.SEND_RESULTS_ARRAY,
-                  value: arr
-                }))
-                
-                
+            results.data.forEach(row => {
+              const UniqueID = uuidv4();
+
+              let csvObj = {}
+              csvObj["UniqueID"] = UniqueID
+              for (const key in row) {
+                csvObj[key] = String(row[key]);
               }
 
+              newCSVData.push(csvObj);
+              
+            });
+
+            dispatch(updateCSVState({
+              type: CSVDATA_TYPES.UPDATE_DATA_CHUNK,
+              value: newCSVData
+            }))
+
+          },
+          complete: () => {
+                
           },
       });
       
@@ -109,17 +109,9 @@ const FileLoader = (props) => {
  
   }, [selectedFile])
 
-  /*useEffect(() => {
-
-    if(csvData){
-      props.updateDataCallback(csvData)
-      props.handleFileLoadingCallback(csvParsed, sendCompleted, checkCompleted, error, columnFields)
-    }
-
-  },[csvData])*/
-
   function onFileChange(event) {
     if (event.target.files.length > 0) {
+      
       setIsSelected(true)
       setSelectedFile(event.target.files[0])
       setSendCompleted(false)
@@ -155,7 +147,7 @@ const FileLoader = (props) => {
       {csvParsed && csvData ? (
         <Box mt={1}>
           <FormLabel>
-            <b>Total Rows Count: </b>{csvDataState ? csvDataState.length: csvData.length}<br/>
+            <b>Total Rows Count: </b>{csvData.length}<br/>
             <b>Total Columns Count:</b> {columnCount}
           </FormLabel>{" "}
       </Box>

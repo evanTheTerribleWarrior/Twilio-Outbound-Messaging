@@ -17,7 +17,6 @@ exports.handler = async function(context, event, callback) {
       invalidNumbers_ID = [];
 
       const twilioClient = context.getTwilioClient();
-      console.log(event);
         
       const {csvData, phoneNumberColumn, startIndex, checkLineType} = event
       if (typeof csvData === 'undefined' || csvData === null || csvData.length === 0) {
@@ -40,8 +39,6 @@ exports.handler = async function(context, event, callback) {
             })
           );
         })
-
-        console.log(promises.length)
 
         Promise.allSettled(promises).then(result => {
           result.forEach((r,index) => {

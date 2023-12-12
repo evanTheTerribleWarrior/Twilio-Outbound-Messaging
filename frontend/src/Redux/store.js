@@ -12,8 +12,8 @@ const store = configureStore({
 
 store.subscribe(throttle(() => {
   const state = store.getState();
-  //saveState({"isAuthenticated": state.auth.isAuthenticated});
-  saveState(state)
+  saveState({"isAuthenticated": state.auth.isAuthenticated});
+  //saveState(state)
 }, 1000));
 
 

@@ -36,31 +36,37 @@ exports.handler = async function(context, event, callback) {
       let sentSuccess = 0;
       let sentErrors = 0;
 
-      const {startIndex, csvData, phoneNumberColumn} = event;
+      const {csvData, phoneNumberColumn} = event;
 
       Promise.allSettled(promises).then((result) => {
         result.forEach((r,index) => {
           if (r.status === "fulfilled"){
-            console.log(r.value.data)
               sentSuccess += r.value.data.success_count; 
               sentErrors += r.value.data.error_count;
               if(r.value.data.message_receipts && r.value.data.message_receipts.length > 0){
                 r.value.data.message_receipts.map(receipt => {
                   let match = sendPrepare.getCorrectIndex(csvData, phoneNumberColumn, receipt.to)
-                  messageReceiptsArray.push({
-                    csvRowID: event.csvData[match].UniqueID,
-                    messageSid: receipt.sid,
-                  })
+                  if(match >= 0){
+                    messageReceiptsArray.push({
+                      csvRowID: csvData[match].UniqueID,
+                      messageSid: receipt.sid,
+                    })
+                  }
+                   
+                  
                 })
               }   
               if(r.value.data.failed_message_receipts && r.value.data.failed_message_receipts.length > 0){
                 r.value.data.failed_message_receipts.map(receipt => {
                   let match = sendPrepare.getCorrectIndex(csvData, phoneNumberColumn, receipt.to)
+                  if(match >= 0){
                   failedReceiptsArray.push({
-                    csvRowID: event.csvData[match].UniqueID,
+                    csvRowID: csvData[match].UniqueID,
                     errorCode: receipt.error_code,
                     errorMessage: receipt.error_message,
+                    status: "failed"
                   })
+                }
                 })
               }        
           } 

@@ -54,30 +54,88 @@ import { MESSAGING_TYPES, COMMON } from '../../Utils/variables';
             case MESSAGING_TYPES.SEND_RESULTS_ARRAY:
               state.sendResultsArray = action.payload.value
               break;
+
+              case MESSAGING_TYPES.UPDATE_DATA_CHUNK:
+              state.sendResultsArray = state.sendResultsArray.concat(action.payload.value);
+              break;
+
+              case MESSAGING_TYPES.ADD_ROW:
+                state.sendResultsArray.unshift(action.payload.value)
+                break;
+
+              case MESSAGING_TYPES.DELETE_ROW:
+              state.sendResultsArray = state.sendResultsArray.filter((row, j) => j !== action.payload.value)
+              break;
               
             case MESSAGING_TYPES.UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND:
               const { messageReceiptsArray, failedReceiptsArray } = action.payload.value;
 
-              console.log(failedReceiptsArray)
+              if(messageReceiptsArray.length > 0) {
+                messageReceiptsArray.map(row => {
+                  let result = state.sendResultsArray.findIndex(r => r.csvRowID === row.csvRowID);
+                  if(result !== -1){
+                    state.sendResultsArray[result].messageSid = row.messageSid
+                    return;
+                  }
+                  else {
+                      let sendResultsObj = {}
+                      sendResultsObj["messageSid"] = row.messageSid
+                      sendResultsObj["error"] = {}
+                      sendResultsObj["error"]["errorCode"] = ""
+                      sendResultsObj["error"]["errorMessage"] = ""
+                      sendResultsObj["error"]["errorLink"] = ""
+                      sendResultsObj["status"] = ""
+                      sendResultsObj["csvRowID"] = row.csvRowID
 
-              state.sendResultsArray = state.sendResultsArray.map(row => {
-                let result = messageReceiptsArray.find(r => r.csvRowID === row.csvRowID);
-                if (result){
-                  return { ...row, messageSid: result.messageSid }
-                }
-                else {
-                  result = failedReceiptsArray.find(r => r.csvRowID === row.csvRowID);
-                  console.log(result)
-                  if (result) 
-                    return { 
-                      ...row, 
-                      error: {...row.error, errorCode: result.errorCode, errorMessage: result.errorMessage},
-                      status: "failed"
-                    }
-                }
-                return row;
-              });
+                      state.sendResultsArray.push(sendResultsObj)
+                      sendResultsObj = {}
+                      return;
+                    
+                  }
+                })
+              }
+
+              if(failedReceiptsArray.length > 0) {
+                failedReceiptsArray.map(row => {
+                  let result = state.sendResultsArray.findIndex(r => r.csvRowID === row.csvRowID);
+                  if(result !== -1){
+                    state.sendResultsArray[result]["error"].errorCode = row.errorCode
+                    state.sendResultsArray[result]["error"].errorMessage = row.errorMessage
+                    return;
+                  }
+                  else {
+                      let sendResultsObj = {}
+                      sendResultsObj["messageSid"] = ""
+                      sendResultsObj["error"] = {}
+                      sendResultsObj["error"]["errorCode"] = row.errorCode
+                      sendResultsObj["error"]["errorMessage"] = row.errorMessage
+                      sendResultsObj["error"]["errorLink"] = ""
+                      sendResultsObj["status"] = row.status
+                      sendResultsObj["csvRowID"] = row.csvRowID
+
+                      state.sendResultsArray.push(sendResultsObj)
+                      sendResultsObj = {}
+                      return;
+                  }
+                })
+              }
+
               break;
+
+              case MESSAGING_TYPES.UPDATE_STATUS_CHUNK:
+                if(action.payload.value.length > 0) {
+                  action.payload.value.map(row => {
+                    let result = state.sendResultsArray.findIndex(r => r.csvRowID === row.csvRowID);
+                    if(result !== -1){
+                      state.sendResultsArray[result].status = row.status;
+                      state.sendResultsArray[result].error.errorCode = row.error.errorCode
+                      state.sendResultsArray[result].error.errorMessage = row.error.errorMessage
+                      return;    
+                    }
+                    return;
+                  })
+                }
+                break;
               case COMMON.RESET_STATE:
                 return initialState
         }

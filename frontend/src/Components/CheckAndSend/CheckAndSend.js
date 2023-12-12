@@ -114,6 +114,8 @@ const CheckAndSend = () => {
         startIndex: chunk.startIndex,
         checkLineType: lineTypeSwitch
       }
+
+      console.log(data)
       return await checkNumbers(data, updateProgressBar);
     }
 
@@ -165,7 +167,7 @@ const CheckAndSend = () => {
 
   const handleSendMessages = async () => {
     if (hasEmptyNumbers()) return;
-    if (hasDuplicates()) return;
+    //if (hasDuplicates()) return;
     const startTime = new Date();
     const chunkSize = broadcastSwitch ? limits.broadcastChunkSize : limits.standardAPIChunkSize;
     const chunks = chunkArray(csvData, chunkSize);
@@ -189,14 +191,11 @@ const CheckAndSend = () => {
     let failedReceiptsArray = [];
 
     results.forEach((r,index) => {
-      console.log(r)
       if (r.status === 'fulfilled') {
         sentSuccess += r.value.sentSuccess;
         sentErrors += r.value.sentErrors;
         messageReceiptsArray = messageReceiptsArray.concat(r.value.messageReceiptsArray)
         failedReceiptsArray = failedReceiptsArray.concat(r.value.failedReceiptsArray)
-
-        console.log(r.value.failedToSend)
 
         const resultsForState = {
           messageReceiptsArray: messageReceiptsArray,
@@ -224,8 +223,6 @@ const CheckAndSend = () => {
       failedReceiptsArray,
       source: "send"
     }
-
-    console.log(sendDataForLogs)
 
     dispatch(updateActionState({
 			type: ACTION_TYPES.SEND_DATA_FOR_LOGS,

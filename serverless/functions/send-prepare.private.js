@@ -43,6 +43,7 @@ exports.prepareData = (event) => {
                 break;
             case "SMS":
                 userObj['to'] = `${phoneNumber}`
+                break;
         }
 
         if(messageTypeSelection === "Custom") {
@@ -60,8 +61,6 @@ exports.prepareData = (event) => {
         } 
         Messages.push(userObj);  
     })
-
-    console.log(Messages)
 
     return {
         ...messageData,

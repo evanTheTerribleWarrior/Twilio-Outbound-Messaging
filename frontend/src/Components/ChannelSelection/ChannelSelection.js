@@ -12,11 +12,8 @@ const ChannelSelection = () => {
 
 	const channelSelection = useSelector((state) => state.messagingStructure.channelSelection)
 	const dispatch = useDispatch()
-
-	const [radioSelection, setRadioSelection] = useState(channelSelection)
 	
-	function onRadioChange(event) {
-		setRadioSelection(event.target.value)
+	const onRadioChange = (event) => {
 		dispatch(updateMessagingState({
 			type: MESSAGING_TYPES.CHANNEL_SELECTION,
 			value: event.target.value
@@ -26,7 +23,7 @@ const ChannelSelection = () => {
 	return (
 
 		<>
-          <RadioGroup aria-label="channel" name="channel" value={radioSelection} onChange={onRadioChange} row>
+          <RadioGroup aria-label="channel" name="channel" value={channelSelection} onChange={onRadioChange} row>
             <FormControlLabel value="SMS" control={<Radio />} label="SMS" style={{ marginRight: '50px' }}  />
             <FormControlLabel value="Whatsapp" control={<Radio />} label="Whatsapp" style={{ marginRight: '50px' }}   />
 			<FormControlLabel value="FBM" control={<Radio />} label="Facebook Messenger" />

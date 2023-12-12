@@ -15,6 +15,8 @@ exports.handler = function(context, event, callback) {
 
     const { sendResultsArray, startIndex } = event;
 
+    console.log(sendResultsArray)
+
 		let promises = [];
     const expbackoffPath = Runtime.getFunctions()['exponential-backoff'].path;
     const expbackoff = require(expbackoffPath)
@@ -26,16 +28,17 @@ exports.handler = function(context, event, callback) {
             {return twilioClient.messages(row.messageSid).fetch()}
           })
         );
+        return;
       }
-      else {
+      return;
+      /*else {
         promises.push("")
-      }
+        return;
+      }*/
     })
 
 		Promise.allSettled(promises).then((result) => {
-      result.forEach((r,index) => {
-        console.log(r)
-        //let status_obj = {}       
+      result.forEach((r,index) => {    
         if(promises[index] === "")return;
         if (r.status === "fulfilled") {
           sendResultsArray[index]["status"] = r.value.status
