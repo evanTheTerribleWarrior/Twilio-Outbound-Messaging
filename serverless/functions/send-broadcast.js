@@ -77,7 +77,7 @@ exports.handler = async function(context, event, callback) {
           }
 
         });
-        console.log(failedReceiptsArray)
+
         response.setBody({
           status: true,
           message: "Messages Sent",

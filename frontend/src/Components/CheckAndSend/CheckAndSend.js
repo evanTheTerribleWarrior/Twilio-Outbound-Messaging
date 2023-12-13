@@ -232,7 +232,7 @@ const CheckAndSend = () => {
     const endTime = new Date();
     const timeTaken = (endTime - startTime) / 1000;
 
-    console.log(`The whole thing for ${csvData.length} rows took ${timeTaken}`)
+    console.log(`The whole thing for ${messageReceiptsArray.length} and ${messageReceiptsArray.length + failedReceiptsArray.length} rows took ${timeTaken}`)
 
   }
 

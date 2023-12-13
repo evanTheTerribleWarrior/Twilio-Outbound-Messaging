@@ -71,21 +71,36 @@ const CampaignTable = () => {
     const chunks = chunkArray(sendResultsArray, chunkSize);
 
     const processChunk = async (chunk) => {
-      const data = {
-        sendResultsArray: chunk.chunkData,
-        startIndex: chunk.startIndex
+      let shouldCheckStatus = false;
+
+      for (let i = 0; i < chunk.chunkData.length; i++) {
+        if(chunk.chunkData[i].messageSid.length > 0){
+          shouldCheckStatus = true;
+          break;
+        }
       }
-      return await getMessageStatus(data);
+
+      if(shouldCheckStatus){
+        const data = {
+          sendResultsArray: chunk.chunkData,
+          startIndex: chunk.startIndex
+        }
+        return await getMessageStatus(data);
+      }
+      else {
+        return;
+      }
+      
     }
 
     const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
 
     results.forEach((r,index) => {
       console.log(r)
-      if (r.status === 'fulfilled') {
+      if (r.status === 'fulfilled' && r.value) {
         dispatch(updateMessagingState({
           type: MESSAGING_TYPES.UPDATE_STATUS_CHUNK,
-          value: r.value.sendResultsArray
+          value: r.value.getStatusArray
         }))
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)

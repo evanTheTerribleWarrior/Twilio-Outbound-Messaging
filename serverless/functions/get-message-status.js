@@ -15,14 +15,13 @@ exports.handler = function(context, event, callback) {
 
     const { sendResultsArray, startIndex } = event;
 
-    console.log(sendResultsArray)
-
 		let promises = [];
     const expbackoffPath = Runtime.getFunctions()['exponential-backoff'].path;
     const expbackoff = require(expbackoffPath)
 
     sendResultsArray.map((row) => {
       if(row.messageSid.length > 0){
+        console.log(row)
         promises.push(
           expbackoff.expbackoff(async () => {
             {return twilioClient.messages(row.messageSid).fetch()}
@@ -31,34 +30,40 @@ exports.handler = function(context, event, callback) {
         return;
       }
       return;
-      /*else {
-        promises.push("")
-        return;
-      }*/
     })
 
+    let getStatusArray = []
+
 		Promise.allSettled(promises).then((result) => {
-      result.forEach((r,index) => {    
+      result.forEach((r,index) => {   
+        let getStatusObj = {
+          error: {}
+        } 
         if(promises[index] === "")return;
         if (r.status === "fulfilled") {
-          sendResultsArray[index]["status"] = r.value.status
-          sendResultsArray[index]["error"]["errorMessage"] = r.value.errorMessage
-          sendResultsArray[index]["error"]["errorCode"] = r.value.errorCode
-          if(!r.value.errorMessage)sendResultsArray[index]["error"]["errorLink"]=""
+          
+          getStatusObj["csvRowID"] = sendResultsArray[index].csvRowID
+          getStatusObj["status"] = r.value.status
+          getStatusObj["error"]["errorMessage"] = r.value.errorMessage
+          getStatusObj["error"]["errorCode"] = r.value.errorCode
         }
         else if (r.status === "rejected"){
-          sendResultsArray[index]["status"] = "failed"
-          sendResultsArray[index]["error"]["errorLink"] = r.reason.moreInfo
-          sendResultsArray[index]["error"]["errorCode"] = r.reason.code
+          getStatusObj["csvRowID"] = sendResultsArray[index].csvRowID
+          getStatusObj["status"] = "failed"
+          getStatusObj["error"]["errorMessage"] = r.reason.moreInfo
+          getStatusObj["error"]["errorCode"] = r.reason.code
         }
+        getStatusArray.push(getStatusObj)
   
       })
+
+      console.log(getStatusArray)
       
       response.setBody({
         status: true,
         message: "Getting Statuses done",
         data: {
-          sendResultsArray: sendResultsArray
+          getStatusArray: getStatusArray
         },
       })
       callback(null, response);
