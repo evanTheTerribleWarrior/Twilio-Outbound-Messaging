@@ -1,5 +1,4 @@
 Check and Send:
-- Add "Sending/Checking please wait" message or PROGRESS BAR
 - Handle error in promises
 - Scheduling not done
 - Review exponential backoff for browser level
@@ -10,8 +9,6 @@ Logs:
 - Update logs for all the use cases
 
 General:
-- Uncomment handle duplicates after tests
-- Bring the prepare data function in the frontend?
 
 Future:
 - Add GBM?

@@ -86,6 +86,7 @@ A sample .csv is included that you can load and play around. It has certain elem
 ## TODO
 
 - Messenger via Content API templates gets stuck (works fine with normal custom message)
+- Scalability: since most of the updates of the rows happen UI-end, it gets more laggy as the csv files grow
 
 ## Credits
 This repository is built upon the following:
