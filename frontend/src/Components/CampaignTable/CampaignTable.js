@@ -64,7 +64,19 @@ const CampaignTable = () => {
     setCurrent(page * rowsPerPage);
   }, [page, rowsPerPage]);
 
+  const updateProgressBar = (newValue, totalData) => {
+    return dispatch(updateActionState({
+      type: ACTION_TYPES.PROGRESS_BAR_COUNT,
+      value: {
+        newValue: newValue,
+        totalData: totalData
+      }
+    }))
+  }
+
   const handleGetStatus = async () => {
+
+    updateProgressBar(0, csvData.length)
 
     const startTime = new Date();
     const chunkSize = limits.getStatusChunkSize;
@@ -85,10 +97,12 @@ const CampaignTable = () => {
           sendResultsArray: chunk.chunkData,
           startIndex: chunk.startIndex
         }
+        updateProgressBar(limits.getStatusChunkSize, csvData.length)
         return await getMessageStatus(data);
       }
       else {
-        return;
+        updateProgressBar(limits.getStatusChunkSize, csvData.length)
+        return ;
       }
       
     }
@@ -96,7 +110,6 @@ const CampaignTable = () => {
     const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
 
     results.forEach((r,index) => {
-      console.log(r)
       if (r.status === 'fulfilled' && r.value) {
         dispatch(updateMessagingState({
           type: MESSAGING_TYPES.UPDATE_STATUS_CHUNK,
@@ -106,8 +119,6 @@ const CampaignTable = () => {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
     });
-
-    console.log(sendResultsArray)
 
     dispatch(updateSettingsState({
       type: SETTINGS_TYPES.ENABLE_GRAPH,

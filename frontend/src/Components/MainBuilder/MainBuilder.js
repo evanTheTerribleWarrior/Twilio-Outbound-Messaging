@@ -7,7 +7,7 @@ import ChannelSelection from '../ChannelSelection/ChannelSelection';
 import NumberColumnSelection from '../NumberColumnSelection/NumberColumnSelection';
 import MessageBuilder from '../MessageBuilder/MessageBuilder';
 import SenderBuilder from '../SenderBuilder/SenderBuilder';
-import Logs from '../Logs/Logs'
+import Logs from '../LogManager/Logs'
 import CampaignTable from '../CampaignTable/CampaignTable';
 import CheckAndSend from '../CheckAndSend/CheckAndSend';
 import Settings from '../Settings/Settings';

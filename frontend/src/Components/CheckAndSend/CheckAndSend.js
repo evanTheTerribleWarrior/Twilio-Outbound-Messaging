@@ -4,7 +4,7 @@ import { Button, Stack, Box, FormControlLabel, Switch, Alert, IconButton, AlertT
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ProTip from '../ProTip/ProTip';
 import { ACTION_TYPES, SETTINGS_TYPES, MESSAGING_TYPES, CSVDATA_TYPES } from '../../Utils/variables';
-import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices } from '../../Utils/functions';
+import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices, isVadidObject } from '../../Utils/functions';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 import { updateMessagingState } from '../../Redux/slices/messagingSlice';
@@ -92,16 +92,24 @@ const CheckAndSend = () => {
     
   }
 
-  const updateProgressBar = (chunk) => {
-    dispatch(updateActionState({
+  const updateProgressBar = (newValue, totalData) => {
+    return dispatch(updateActionState({
       type: ACTION_TYPES.PROGRESS_BAR_COUNT,
-      value: chunk
+      value: {
+        newValue: newValue,
+        totalData: totalData
+      }
     }))
   }
+
+  
   
   const handleCheckNumbers = async () => {
+    
     if (hasEmptyNumbers()) return;
-    //if (hasDuplicates()) return;
+    if (hasDuplicates()) return;
+
+    updateProgressBar(0, csvData.length);
 
     const startTime = new Date();
     const chunkSize = limits.lookupChunkSize;
@@ -114,9 +122,9 @@ const CheckAndSend = () => {
         startIndex: chunk.startIndex,
         checkLineType: lineTypeSwitch
       }
-
-      console.log(data)
-      return await checkNumbers(data, updateProgressBar);
+      updateProgressBar(chunkSize, csvData.length)
+      return await checkNumbers(data);
+      
     }
 
     const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
@@ -140,6 +148,8 @@ const CheckAndSend = () => {
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
+      console.log(index)
+      
       
     });
 
@@ -167,7 +177,9 @@ const CheckAndSend = () => {
 
   const handleSendMessages = async () => {
     if (hasEmptyNumbers()) return;
-    //if (hasDuplicates()) return;
+    if (hasDuplicates()) return;
+    updateProgressBar(0, csvData.length)
+    
     const startTime = new Date();
     const chunkSize = broadcastSwitch ? limits.broadcastChunkSize : limits.standardAPIChunkSize;
     const chunks = chunkArray(csvData, chunkSize);
@@ -179,8 +191,10 @@ const CheckAndSend = () => {
         phoneNumberColumn: phoneNumberColumn,
         ...messagingStructure
       }
+      
+      updateProgressBar(chunkSize, csvData.length)
+      return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard");
 
-      return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard", updateProgressBar);
     }
 
     const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
@@ -196,25 +210,23 @@ const CheckAndSend = () => {
         sentErrors += r.value.sentErrors;
         messageReceiptsArray = messageReceiptsArray.concat(r.value.messageReceiptsArray)
         failedReceiptsArray = failedReceiptsArray.concat(r.value.failedReceiptsArray)
+        console.log(`Promise no ${index} fulfilled`)
 
-        const resultsForState = {
-          messageReceiptsArray: messageReceiptsArray,
-          failedReceiptsArray: failedReceiptsArray
-        }
-
-        dispatch(updateMessagingState({
-          type: MESSAGING_TYPES.UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND,
-          value: resultsForState
-        }))
         
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
-      dispatch(updateActionState({
-        type: ACTION_TYPES.PROGRESS_BAR_COUNT,
-        value: 1
-      }))
     });
+
+    const resultsForState = {
+      messageReceiptsArray,
+      failedReceiptsArray
+    }
+
+    dispatch(updateMessagingState({
+      type: MESSAGING_TYPES.UPDATE_SEND_RESULTS_ARRAY_AFTER_SEND,
+      value: resultsForState
+    }))
 
     const sendDataForLogs = {
       sentSuccess,

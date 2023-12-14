@@ -56,8 +56,6 @@ exports.handler = function(context, event, callback) {
         getStatusArray.push(getStatusObj)
   
       })
-
-      console.log(getStatusArray)
       
       response.setBody({
         status: true,

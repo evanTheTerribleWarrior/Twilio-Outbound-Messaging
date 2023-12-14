@@ -87,7 +87,7 @@ export async function removeJWT () {
   }
 }
 
-export async function sendMessages(sendData, sendType, updateProgressBar) {
+export async function sendMessages(sendData, sendType) {
   try {
     const endpoint = sendType === "broadcast" ? API_URLS.SEND_BROADCAST_API : API_URLS.SEND_SMS_API
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + endpoint 
@@ -100,14 +100,13 @@ export async function sendMessages(sendData, sendType, updateProgressBar) {
         credentials: 'same-origin'
     });
     const data = await response.json();
-    updateProgressBar(sendData.csvData.length)
     return data.data;
   } catch (error) {
       throw new Error(`sendMessages failed with error message: ${error}`);
   }
 }
 
-export async function checkNumbers(checkData, updateProgressBar) {
+export async function checkNumbers(checkData) {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.CHECK_NUMBERS    
     const response = await fetch(url, {
@@ -119,7 +118,6 @@ export async function checkNumbers(checkData, updateProgressBar) {
         credentials: 'same-origin'
     });
     const data = await response.json();
-    updateProgressBar(checkData.csvData.length)
     return data.data;
   } catch (error) {
       throw new Error(`checkNumbers failed with error message: ${error}`);
@@ -140,7 +138,7 @@ export async function getMessageStatus(getData) {
     const data = await response.json();
     return data.data;
   } catch (error) {
-      throw new Error(`checkNumbers failed with error message: ${error}`);
+      throw new Error(`getMessageStatus failed with error message: ${error}`);
   }
 }
 
@@ -205,4 +203,8 @@ export const downloadCSV = (csvContent, filename) => {
   link.href = URL.createObjectURL(blob);
   link.download = filename;
   link.click();
+}
+
+export const isVadidObject = (obj) => {
+  return obj !== null && typeof obj === 'object' && Object.keys(obj).length > 0;
 }

@@ -33,8 +33,17 @@ import { ACTION_TYPES, COMMON, LOGS } from '../../Utils/variables';
               state.duplicateNumberDataForLogs = action.payload.value
               break;
               case ACTION_TYPES.PROGRESS_BAR_COUNT:
-              state.progressBarCount += action.payload.value
-              break;
+                let currentBarCount = state.progressBarCount;
+                const newValue = action.payload.value.newValue;
+                const totalData = action.payload.value.totalData;
+                if(newValue === 0){
+                  state.progressBarCount = 0
+                }
+                else {
+                  const newBarCount = currentBarCount + newValue;
+                  state.progressBarCount = newBarCount > totalData ? totalData : newBarCount;
+                }
+                break;
             case ACTION_TYPES.TOTAL_LOGS:
                 state.totalLogs = action.payload.value
                 break;
