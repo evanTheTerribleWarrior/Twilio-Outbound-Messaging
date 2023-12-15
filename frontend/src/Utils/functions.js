@@ -172,7 +172,11 @@ export const processChunksInBatches = async (chunks, processChunk, limit) => {
 }
 
 const normalizePhoneNumber = (phoneNumber) => {
-  return phoneNumber.startsWith('+') ? phoneNumber.substring(1) : phoneNumber;
+  let cleanedNumber = phoneNumber.replace(/[^\d+]/g, '');
+    if (!cleanedNumber.startsWith('+')) {
+        cleanedNumber = '+' + cleanedNumber;
+    }
+    return cleanedNumber;
 }
 
 export const findDuplicatePhoneIndices = (csvData, phoneNumberColumn) => {
