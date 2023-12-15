@@ -4,7 +4,7 @@ import { Button, Stack, Box, FormControlLabel, Switch, Alert, IconButton, AlertT
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ProTip from '../ProTip/ProTip';
 import { ACTION_TYPES, SETTINGS_TYPES, MESSAGING_TYPES, CSVDATA_TYPES } from '../../Utils/variables';
-import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices, isVadidObject } from '../../Utils/functions';
+import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices, normalizePhoneNumber } from '../../Utils/functions';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 import { updateMessagingState } from '../../Redux/slices/messagingSlice';
@@ -116,6 +116,7 @@ const CheckAndSend = () => {
     const chunks = chunkArray(csvData, chunkSize);
 
     const processChunk = async (chunk) => {
+
       const data = {
         csvData: chunk.chunkData,
         phoneNumberColumn: phoneNumberColumn,
@@ -211,7 +212,7 @@ const CheckAndSend = () => {
         messageReceiptsArray = messageReceiptsArray.concat(r.value.messageReceiptsArray)
         failedReceiptsArray = failedReceiptsArray.concat(r.value.failedReceiptsArray)
         console.log(`Promise no ${index} fulfilled`)
-
+        console.log(r.value)
         
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)

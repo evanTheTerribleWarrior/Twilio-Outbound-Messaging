@@ -171,7 +171,7 @@ export const processChunksInBatches = async (chunks, processChunk, limit) => {
   return Promise.allSettled(results);
 }
 
-const normalizePhoneNumber = (phoneNumber) => {
+export const normalizePhoneNumber = (phoneNumber) => {
   let cleanedNumber = phoneNumber.replace(/[^\d+]/g, '');
     if (!cleanedNumber.startsWith('+')) {
         cleanedNumber = '+' + cleanedNumber;

@@ -1,4 +1,11 @@
 /* This function prepares the data depending on the selections of the user to be passed to SMS API or Broadcast API */
+const normalizePhoneNumber = (phoneNumber) => {
+  let cleanedNumber = phoneNumber.replace(/[^\d+]/g, '');
+    if (!cleanedNumber.startsWith('+')) {
+        cleanedNumber = '+' + cleanedNumber;
+    }
+    return cleanedNumber;
+}
 
 exports.prepareData = (event) => {
 
@@ -31,8 +38,9 @@ exports.prepareData = (event) => {
 
         let phoneNumber = row[phoneNumberColumn]
         if(channelSelection === "SMS" || channelSelection === "Whatsapp"){
-            if (!phoneNumber.startsWith('+')) phoneNumber = `+${phoneNumber}`
+          phoneNumber = normalizePhoneNumber(phoneNumber)
         }
+        console.log(phoneNumber)
         userObj['to'] = ""
         switch (channelSelection){
             case "Whatsapp":
@@ -74,19 +82,13 @@ exports.getCorrectIndex = (csvData, phoneNumberColumn, userNumber) => {
     if(userNumber.startsWith("whatsapp:") || userNumber.startsWith("messenger:")){
       userNumber = userNumber.split(":")[1]
     }
-    if(userNumber.startsWith("+")){
-      userNumber = userNumber.split("+")[1]
-    }
+    userNumber = normalizePhoneNumber(userNumber)
     const match = csvData.findIndex(r => {
-      let csvDataUserNumber = ""
-      if(r[phoneNumberColumn].startsWith("+")){
-        csvDataUserNumber = r[phoneNumberColumn].split("+")[1]
-      }
-      else {
-        csvDataUserNumber = r[phoneNumberColumn]
-      }
+      let csvDataUserNumber = normalizePhoneNumber(r[phoneNumberColumn])
+      console.log(`usernumber: ${userNumber}, csvnumber:${csvDataUserNumber}`)
        return csvDataUserNumber === userNumber
     });
+    console.log(match)
     return match;
   }
 
