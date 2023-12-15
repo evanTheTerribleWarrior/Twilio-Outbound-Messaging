@@ -171,23 +171,25 @@ export const processChunksInBatches = async (chunks, processChunk, limit) => {
   return Promise.allSettled(results);
 }
 
-export const findDuplicatePhoneIndices = (csvData) => {
-  const phoneIndices = {};
+const normalizePhoneNumber = (phoneNumber) => {
+  return phoneNumber.startsWith('+') ? phoneNumber.substring(1) : phoneNumber;
+}
+
+export const findDuplicatePhoneIndices = (csvData, phoneNumberColumn) => {
+  const phoneIndices = new Map();
   const duplicates = [];
 
   csvData.forEach((item, index) => {
-    if (phoneIndices.hasOwnProperty(item.Phone)) {
-      if (phoneIndices[item.Phone].length === 1) {
-        duplicates.push(phoneIndices[item.Phone][0]);
+      const normalizedPhone = normalizePhoneNumber(item[phoneNumberColumn]);
+      if (phoneIndices.has(normalizedPhone)) {
+          duplicates.push(index);
+          duplicates.push(...phoneIndices.get(normalizedPhone));
+      } else {
+          phoneIndices.set(normalizedPhone, [index]);
       }
-      duplicates.push(index);
-      phoneIndices[item.Phone].push(index);
-    } else {
-      phoneIndices[item.Phone] = [index];
-    }
   });
 
-  return duplicates;
+  return Array.from(new Set(duplicates)).sort((a, b) => a - b);
 }
 
 export const convertToCSV = (arr) => {

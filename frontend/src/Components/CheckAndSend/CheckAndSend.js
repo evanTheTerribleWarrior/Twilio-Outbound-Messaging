@@ -70,7 +70,7 @@ const CheckAndSend = () => {
   }
 
   const hasDuplicates = () => {
-    let duplicateNumbers = findDuplicatePhoneIndices(csvData)
+    let duplicateNumbers = findDuplicatePhoneIndices(csvData, phoneNumberColumn)
     if (duplicateNumbers.length > 0) {
       const duplicateNumberDataForLogs = {
         duplicateNumbers: duplicateNumbers,
@@ -264,7 +264,7 @@ const CheckAndSend = () => {
     { broadcastAlertClicked &&
       (<Alert severity="info">
         If selected, we will use the Broadcast API to send messages, which sends 1 request to many recipients, so it can be more efficient
-        for high volume messaging. As of December 2023, this API is in pilot so full stability is not guaranteed.
+        for high volume messaging. As of December 2023, this API is in pilot so your account needs to be manually enabled and full stability is not guaranteed.
       </Alert>)
     }
     { lineTypeAlertClicked &&
