@@ -193,6 +193,8 @@ export const findDuplicatePhoneIndices = (csvData, phoneNumberColumn) => {
       }
   });
 
+  console.log(duplicates)
+
   return Array.from(new Set(duplicates)).sort((a, b) => a - b);
 }
 

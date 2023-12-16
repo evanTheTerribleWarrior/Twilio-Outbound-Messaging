@@ -5,7 +5,7 @@ function randomNumber(min, max){
     return Math.floor(r)
 }
 
-async function expbackoff(fn, depth = 0) {
+export const expbackoff = async (fn, depth = 0) => {
 	try {
 		return await fn();
 	}catch(e) {
@@ -33,5 +33,3 @@ async function expbackoff(fn, depth = 0) {
 		
 	}
 }
-
-export {expbackoff}

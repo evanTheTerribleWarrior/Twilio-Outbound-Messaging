@@ -37,6 +37,7 @@ import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { CSVDATA_TYPES, MESSAGING_TYPES, SETTINGS_TYPES, ACTION_TYPES } from '../../Utils/variables';
 import { chunkArray, processChunksInBatches, getMessageStatus } from '../../Utils/functions';
+import { expbackoff } from '../../exponential-backoff';
 
 const in_progress_statuses = ["accepted", "queued", "sent", "sending"]
 const failed_statuses = ["undelivered", "failed"]
@@ -98,7 +99,9 @@ const CampaignTable = () => {
           startIndex: chunk.startIndex
         }
         updateProgressBar(limits.getStatusChunkSize, csvData.length)
-        return await getMessageStatus(data);
+        return expbackoff(async () => {
+          return getMessageStatus(data);
+        })
       }
       else {
         updateProgressBar(limits.getStatusChunkSize, csvData.length)

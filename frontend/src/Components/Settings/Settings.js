@@ -28,7 +28,7 @@ const Settings = () => {
             type="number"
             value={limits.browserConcurrency}
             onChange={handleSettingChange('browserConcurrency')}
-            inputProps={{ max: 20 }}
+            inputProps={{ max: 50 }}
             />
         </Tooltip>
         <Tooltip title="When you click Check Numbers, this is the number of rows we will add to each batch">

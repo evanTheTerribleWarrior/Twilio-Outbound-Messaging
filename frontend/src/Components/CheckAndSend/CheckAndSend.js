@@ -8,6 +8,7 @@ import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDup
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 import { updateMessagingState } from '../../Redux/slices/messagingSlice';
+import { expbackoff } from '../../exponential-backoff';
 
 
 const CheckAndSend = () => {
@@ -124,8 +125,9 @@ const CheckAndSend = () => {
         checkLineType: lineTypeSwitch
       }
       updateProgressBar(chunkSize, csvData.length)
-      return await checkNumbers(data);
-      
+      return expbackoff(async () => {
+        return checkNumbers(data);
+      })
     }
 
     const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
@@ -194,7 +196,10 @@ const CheckAndSend = () => {
       }
       
       updateProgressBar(chunkSize, csvData.length)
-      return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard");
+      return expbackoff(async () => {
+        return sendMessages(data, broadcastSwitch ? "broadcast" : "standard");
+      })
+      //return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard");
 
     }
 
