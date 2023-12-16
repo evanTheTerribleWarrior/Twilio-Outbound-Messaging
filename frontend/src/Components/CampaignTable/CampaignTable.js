@@ -39,7 +39,7 @@ import { CSVDATA_TYPES, MESSAGING_TYPES, SETTINGS_TYPES, ACTION_TYPES } from '..
 import { chunkArray, processChunksInBatches, getMessageStatus } from '../../Utils/functions';
 import { expbackoff } from '../../exponential-backoff';
 
-const in_progress_statuses = ["accepted", "queued", "sent", "sending"]
+const in_progress_statuses = ["accepted", "queued", "sent", "sending", "scheduled"]
 const failed_statuses = ["undelivered", "failed"]
 const PlaceholderIcon = () => <HourglassEmptyIcon color="action" />;
 
@@ -304,7 +304,12 @@ const CampaignTable = () => {
 
     else if (sendResultsArray && sendResultsArray.length > 0 && index !== -1 && (in_progress_statuses.includes(sendResultsArray[index]["status"]) || sendResultsArray[index]["status"] === "")){
       
-      title = "Message Successfuly Created - Check Status periodically for final message status. If Status does not change in a few minutes, check Twilio Logs"
+      if(sendResultsArray[index]["status"] === "scheduled"){
+        title = "Message Successfully Scheduled - Check Status once the schedule time has elapsed"
+      }
+      else{
+        title = "Message Successfuly Created - Check Status periodically for final message status. If Status does not change in a few minutes, check Twilio Logs"
+      }
       color = "grey"
       icon = "CheckCircleIcon"
       interactive = false

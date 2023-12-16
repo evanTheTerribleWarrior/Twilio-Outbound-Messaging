@@ -7,14 +7,15 @@ const normalizePhoneNumber = (phoneNumber) => {
     return cleanedNumber;
 }
 
-exports.prepareData = (event) => {
+exports.prepareData = (event, sendType) => {
 
     const { 
         channelSelection,
         messageTypeSelection,
         senderTypeSelection, 
         csvData, 
-        phoneNumberColumn
+        phoneNumberColumn,
+        isSchedulingEnabled
     } = event;
     
     let sender;
@@ -67,8 +68,21 @@ exports.prepareData = (event) => {
           const contentVariables = buildContentVariables(event.templateVariables, row);
           userObj['contentVariables'] = contentVariables;
         } 
+
+        if (isSchedulingEnabled && sendType === "simple") {
+          const scheduledDate = event.scheduledDate
+          userObj['scheduleType'] = 'fixed';
+          userObj['sendAt'] = scheduledDate;
+        }
+
         Messages.push(userObj);  
     })
+
+    if (isSchedulingEnabled && sendType === "broadcast") {
+      const scheduledDate = event.scheduledDate
+      messageData['scheduleType'] = 'fixed';
+      messageData['sendAt'] = scheduledDate
+    }
 
     return {
         ...messageData,

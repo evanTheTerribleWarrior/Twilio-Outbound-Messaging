@@ -17,12 +17,13 @@ const CheckAndSend = () => {
 
   const dispatch = useDispatch()
   const csvData = useSelector(state => state.csvDataStructure.csvData);
-  //const sendResultsArray = useSelector(state => state.messagingStructure.sendResultsArray)
   const phoneNumberColumn = useSelector(state => state.csvDataStructure.csvSelectedColumn)
   const messagingStructure = useSelector(state => state.messagingStructure)
   const broadcastSwitch = useSelector(state => state.settingsStructure.checkBroadcastAPI)
   const lineTypeSwitch = useSelector(state => state.settingsStructure.checkLineType)
   const limits = useSelector(state => state.settingsStructure.limits)
+  const checkScheduleMessages = useSelector(state => state.settingsStructure.checkScheduleMessages)
+  const scheduledDate = useSelector(state => state.messagingStructure.scheduledDate)
 
   const [broadcastAlertClicked, setBroadcastAlert] = useState(false);
   const [lineTypeAlertClicked, setLineTypeAlert] = useState(false);
@@ -188,10 +189,12 @@ const CheckAndSend = () => {
     const chunks = chunkArray(csvData, chunkSize);
 
     const processChunk = async (chunk) => {
+      checkScheduleMessages
       const data = {
         csvData: chunk.chunkData,
         startIndex: chunk.startIndex,
         phoneNumberColumn: phoneNumberColumn,
+        ...(checkScheduleMessages ? { scheduledDate : scheduledDate, isSchedulingEnabled: true } : { isSchedulingEnabled: false}),
         ...messagingStructure
       }
       

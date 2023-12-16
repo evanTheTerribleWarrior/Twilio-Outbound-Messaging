@@ -14,11 +14,12 @@ exports.handler = function(context, event, callback) {
       const expbackoff = require(expbackoffPath)
       const sendPreparePath = Runtime.getFunctions()['send-prepare'].path;
       const sendPrepare = require(sendPreparePath)
-      let preparedData = sendPrepare.prepareData(event);
+      let preparedData = sendPrepare.prepareData(event, "simple");
 
       const twilioClient = context.getTwilioClient();
 
       const { Messages, ...messageData } = preparedData;
+
       const dataToSend = Messages.map(userObj => ({
         ...userObj,
         ...messageData

@@ -88,6 +88,7 @@ export async function removeJWT () {
 }
 
 export async function sendMessages(sendData, sendType) {
+
   try {
     const endpoint = sendType === "broadcast" ? API_URLS.SEND_BROADCAST_API : API_URLS.SEND_SMS_API
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + endpoint 
@@ -192,8 +193,6 @@ export const findDuplicatePhoneIndices = (csvData, phoneNumberColumn) => {
           phoneIndices.set(normalizedPhone, [index]);
       }
   });
-
-  console.log(duplicates)
 
   return Array.from(new Set(duplicates)).sort((a, b) => a - b);
 }

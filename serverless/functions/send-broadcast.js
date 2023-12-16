@@ -15,7 +15,7 @@ exports.handler = async function(context, event, callback) {
       const expbackoff = require(expbackoffPath)
       const sendPreparePath = Runtime.getFunctions()['send-prepare'].path;
       const sendPrepare = require(sendPreparePath)
-      let preparedData = sendPrepare.prepareData(event);
+      let preparedData = sendPrepare.prepareData(event, "broadcast");
 
       const url = 'https://preview.messaging.twilio.com/v1/Messages';
       const config = {
