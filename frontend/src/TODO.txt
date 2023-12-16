@@ -1,12 +1,7 @@
 Check and Send:
 - Handle error in promises
-- Scheduling not done
-- Review exponential backoff for browser level
 - Do not retry delivered
 - Put text under the Selected column if check or send are clicked and there is no column set
-
-Logs:
-- Update logs for all the use cases
 
 General:
 
