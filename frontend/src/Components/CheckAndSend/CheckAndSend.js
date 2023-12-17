@@ -3,8 +3,8 @@ import { useSelector, useDispatch} from 'react-redux'
 import { Button, Stack, Box, FormControlLabel, Switch, Alert, IconButton, AlertTitle } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ProTip from '../ProTip/ProTip';
-import { ACTION_TYPES, SETTINGS_TYPES, MESSAGING_TYPES, CSVDATA_TYPES } from '../../Utils/variables';
-import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices, normalizePhoneNumber } from '../../Utils/functions';
+import { ACTION_TYPES, SETTINGS_TYPES, MESSAGING_TYPES } from '../../Utils/variables';
+import { checkNumbers, chunkArray, processChunksInBatches, sendMessages, findDuplicatePhoneIndices } from '../../Utils/functions';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
 import { updateMessagingState } from '../../Redux/slices/messagingSlice';
@@ -154,9 +154,6 @@ const CheckAndSend = () => {
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
       }
-      console.log(index)
-      
-      
     });
 
     const lookupDataForLogs = {
@@ -213,8 +210,6 @@ const CheckAndSend = () => {
       return expbackoff(async () => {
         return sendMessages(data, broadcastSwitch ? "broadcast" : "standard");
       })
-      //return await sendMessages(data, broadcastSwitch ? "broadcast" : "standard");
-
     }
 
     const results = await processChunksInBatches(chunks, processChunk, limits.browserConcurrency);
@@ -230,8 +225,6 @@ const CheckAndSend = () => {
         sentErrors += r.value.sentErrors;
         messageReceiptsArray = messageReceiptsArray.concat(r.value.messageReceiptsArray)
         failedReceiptsArray = failedReceiptsArray.concat(r.value.failedReceiptsArray)
-        console.log(`Promise no ${index} fulfilled`)
-        console.log(r.value)
         
       } else {
         console.log(`Promise no ${index} rejected with reason: ${r.reason}`)
@@ -264,7 +257,7 @@ const CheckAndSend = () => {
     const endTime = new Date();
     const timeTaken = (endTime - startTime) / 1000;
 
-    console.log(`The whole thing for ${messageReceiptsArray.length} and ${messageReceiptsArray.length + failedReceiptsArray.length} rows took ${timeTaken}`)
+    console.log(`The whole thing for ${messageReceiptsArray.length + failedReceiptsArray.length} rows took ${timeTaken}`)
 
   }
 
@@ -302,12 +295,6 @@ const CheckAndSend = () => {
                 disabled={
                   !phoneNumberColumn
                 }
-                /*disabled={
-                  !this.state.csvParsed ||
-                  this.state.submitting ||
-                  !this.state.selectedColumn ||
-                  this.state.skipChecked
-                }*/
                 margin="normal"
                 component="label"
               >
@@ -316,17 +303,9 @@ const CheckAndSend = () => {
               <Button fullWidth
                 variant="contained"
                 onClick={handleSendMessages}
-                /*disabled={
-                  (!this.state.csvParsed ||
-                  this.state.submitting ||
-                  this.state.msg.length == 0 ||
-                  !this.state.invalidNumbersCheck ||
-                  this.state.invalidNumbers.length > 0 ||
-                  (this.state.sender.length == 0 && this.state.selectedService === "") ||
-                  (this.state.mediaSwitch && !this.state.check_https) ||
-                  !this.state.selectedColumn) &&
-                  !this.state.skipChecked
-                }*/
+                disabled={
+                  !phoneNumberColumn
+                }
                 margin="normal"
                 component="label"
               >

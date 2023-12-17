@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, FormControlLabel, Switch, Alert, IconButton } from '@mui/material';
+import { Box, TextField, FormControlLabel, Switch, Alert, IconButton } from '@mui/material';
 import { addMinutes, addDays, addHours, parse, format, formatISO } from 'date-fns';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSelector, useDispatch } from 'react-redux';
@@ -63,18 +63,21 @@ const MessageScheduler = () => {
             <TextField
               label="Days"
               type="number"
+              inputProps={{ min: "0", step: "1" }}
               value={days}
               onChange={(e) => setDays(parseInt(e.target.value))}
             />
             <TextField
               label="Hours"
               type="number"
+              inputProps={{ min: "0", step: "1" }}
               value={hours}
               onChange={(e) => setHours(parseInt(e.target.value))}
             />
             <TextField
               label="Minutes"
               type="number"
+              inputProps={{ min: "0", step: "1" }}
               value={minutes}
               onChange={(e) => setMinutes(parseInt(e.target.value))}
             />

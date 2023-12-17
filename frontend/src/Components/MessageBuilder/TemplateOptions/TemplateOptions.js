@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useDebugValue } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateMessagingState } from '../../../Redux/slices/messagingSlice';
 import { MESSAGING_TYPES } from '../../../Utils/variables';
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import CircularProgress from '@mui/material/CircularProgress';

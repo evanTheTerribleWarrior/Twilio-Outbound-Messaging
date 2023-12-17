@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Grid, FormControl} from '@mui/material';
-import FileLoader from '../FileLoader/FileLoader';
-import ChannelSelection from '../ChannelSelection/ChannelSelection';
-import NumberColumnSelection from '../NumberColumnSelection/NumberColumnSelection';
-import MessageBuilder from '../MessageBuilder/MessageBuilder';
-import SenderBuilder from '../SenderBuilder/SenderBuilder';
-import Logs from '../LogManager/Logs'
-import CampaignTable from '../CampaignTable/CampaignTable';
-import CheckAndSend from '../CheckAndSend/CheckAndSend';
-import Settings from '../Settings/Settings';
+import { FormControl, Grid } from '@mui/material';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import AccordionTemplate from '../AccordionTemplate/AccordionTemplate';
-import ResultsExports from '../ResultsExport/ResultsExport';
+import CampaignTable from '../CampaignTable/CampaignTable';
+import ChannelSelection from '../ChannelSelection/ChannelSelection';
+import CheckAndSend from '../CheckAndSend/CheckAndSend';
+import FileLoader from '../FileLoader/FileLoader';
+import Logs from '../LogManager/Logs';
+import MessageBuilder from '../MessageBuilder/MessageBuilder';
 import MessageOptions from '../MessageOptions/MessageOptions';
+import NumberColumnSelection from '../NumberColumnSelection/NumberColumnSelection';
+import ResultsExports from '../ResultsExport/ResultsExport';
+import SenderBuilder from '../SenderBuilder/SenderBuilder';
+import Settings from '../Settings/Settings';
 
 const MainBuilder = () => {
   const csvColumnFields = useSelector((state) => state.csvDataStructure.csvColumnFields);
   const csvData = useSelector((state) => state.csvDataStructure.csvData);
 
-  useSelector((state) => console.log(state))
+  //useSelector((state) => console.log(state))
 
   return (
       <Grid container spacing={3}>

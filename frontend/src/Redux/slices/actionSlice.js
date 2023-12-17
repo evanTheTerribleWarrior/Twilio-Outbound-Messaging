@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { ACTION_TYPES, COMMON, LOGS } from '../../Utils/variables';
+import { ACTION_TYPES, COMMON } from '../../Utils/variables';
 
   const initialState = {
     lookupDataForLogs: {},

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Typography, Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import { Box, Radio, RadioGroup, FormControlLabel } from '@mui/material';
 import { MESSAGING_TYPES } from '../../../Utils/variables';
 import { updateMessagingState } from '../../../Redux/slices/messagingSlice';
 

@@ -42,7 +42,6 @@ exports.prepareData = (event, sendType) => {
         if(channelSelection === "SMS" || channelSelection === "Whatsapp"){
           phoneNumber = normalizePhoneNumber(phoneNumber)
         }
-        console.log(phoneNumber)
         userObj['to'] = ""
         switch (channelSelection){
             case "Whatsapp":
@@ -108,10 +107,8 @@ exports.getCorrectIndex = (csvData, phoneNumberColumn, userNumber) => {
     userNumber = normalizePhoneNumber(userNumber)
     const match = csvData.findIndex(r => {
       let csvDataUserNumber = normalizePhoneNumber(r[phoneNumberColumn])
-      console.log(`usernumber: ${userNumber}, csvnumber:${csvDataUserNumber}`)
-       return csvDataUserNumber === userNumber
+      return csvDataUserNumber === userNumber
     });
-    console.log(match)
     return match;
   }
 

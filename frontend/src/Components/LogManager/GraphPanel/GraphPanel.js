@@ -1,11 +1,11 @@
 import React from 'react';
 import Stack from '@mui/material/Stack';
-import { BarChart, CartesianGrid, XAxis, YAxis , Bar, PieChart, Pie, Cell, Tooltip, Label } from 'recharts';
+import { BarChart, CartesianGrid, XAxis, YAxis , Bar, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { useSelector } from 'react-redux';
 
 const GraphPanel = (props) => {
     
-    const { logs, value, index } = props;
+    const { index } = props;
     const sendResultsArray = useSelector(state => state.messagingStructure.sendResultsArray)
 
     const statuses = ["accepted", "queued", "sent", "sending","undelivered", "failed", "delivered", "read"]

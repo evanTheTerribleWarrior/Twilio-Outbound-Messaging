@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Papa from "papaparse";
 import { v4 as uuidv4 } from 'uuid';
 import { updateCSVState } from '../../Redux/slices/csvDataSlice';
-import { ACTION_TYPES, CSVDATA_TYPES, MESSAGING_TYPES, COMMON } from '../../Utils/variables';
+import { CSVDATA_TYPES, COMMON } from '../../Utils/variables';
 import { updateMessagingState } from '../../Redux/slices/messagingSlice';
 import { updateActionState } from '../../Redux/slices/actionSlice';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';

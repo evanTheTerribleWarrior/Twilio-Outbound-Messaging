@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Typography, TextField, Box, FormControl, Switch, FormControlLabel, IconButton, Alert, FormHelperText } from '@mui/material';
+import { TextField, Box, FormControl, Switch, FormControlLabel, IconButton, Alert, FormHelperText } from '@mui/material';
 import TemplateOptions from './TemplateOptions/TemplateOptions';
 import ContentTemplateRenderer from './ContentTemplateRenderer/ContentTemplateRenderer';
 import ProTip from '../ProTip/ProTip';
@@ -15,7 +15,6 @@ const MessageBuilder = () => {
     const messageTypeSelection = useSelector(state => state.messagingStructure.messageTypeSelection)
     const template = useSelector(state => state.messagingStructure.selectedTemplate)
     const msg = useSelector(state => state.messagingStructure.customMessage)
-    //const mediaURL = useSelector(state => state.messagingStructure.customMediaURL)
     const mediaSwitch = useSelector(state => state.settingsStructure.checkMediaURL)
 
     const dispatch = useDispatch()
