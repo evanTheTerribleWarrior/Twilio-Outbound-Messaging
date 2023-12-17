@@ -23,6 +23,7 @@ Easily set up and send out messaging campaigns using your Twilio account.
  * JWT authentication
  * Exponential Backoff for error 429 "Too Many Requests"
  * Redux store used to save important data across the application locally
+ * Download the results in csv format or send them to your webhook endpoint
 
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
