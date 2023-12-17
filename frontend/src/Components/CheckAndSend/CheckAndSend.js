@@ -24,6 +24,7 @@ const CheckAndSend = () => {
   const limits = useSelector(state => state.settingsStructure.limits)
   const checkScheduleMessages = useSelector(state => state.settingsStructure.checkScheduleMessages)
   const scheduledDate = useSelector(state => state.messagingStructure.scheduledDate)
+  const sendResultsArray = useSelector(state => state.messagingStructure.sendResultsArray)
 
   const [broadcastAlertClicked, setBroadcastAlert] = useState(false);
   const [lineTypeAlertClicked, setLineTypeAlert] = useState(false);
@@ -189,9 +190,16 @@ const CheckAndSend = () => {
     const chunks = chunkArray(csvData, chunkSize);
 
     const processChunk = async (chunk) => {
-      checkScheduleMessages
+      
+      if(sendResultsArray.length > 0){
+        const filteredChunkData = chunk.chunkData.filter(chunkItem => {
+          const found = sendResultsArray.find(r => r.csvRowID === chunkItem.UniqueID);
+          return !(found && found.status === 'delivered');
+        });
+      }
+      
       const data = {
-        csvData: chunk.chunkData,
+        csvData: filteredChunkData,
         startIndex: chunk.startIndex,
         phoneNumberColumn: phoneNumberColumn,
         ...(checkScheduleMessages ? { scheduledDate : scheduledDate, isSchedulingEnabled: true } : { isSchedulingEnabled: false}),
