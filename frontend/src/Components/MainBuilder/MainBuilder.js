@@ -13,6 +13,7 @@ import CheckAndSend from '../CheckAndSend/CheckAndSend';
 import Settings from '../Settings/Settings';
 import AccordionTemplate from '../AccordionTemplate/AccordionTemplate';
 import ResultsExports from '../ResultsExport/ResultsExport';
+import MessageOptions from '../MessageOptions/MessageOptions';
 
 const MainBuilder = () => {
   const csvColumnFields = useSelector((state) => state.csvDataStructure.csvColumnFields);
@@ -33,6 +34,10 @@ const MainBuilder = () => {
 
             <AccordionTemplate title="Build Message">
               <MessageBuilder/>
+            </AccordionTemplate>
+
+            <AccordionTemplate title="Message Options">
+              <MessageOptions/>
             </AccordionTemplate>
 
             <AccordionTemplate title="Choose Sender">

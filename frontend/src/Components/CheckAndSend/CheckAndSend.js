@@ -25,6 +25,7 @@ const CheckAndSend = () => {
   const checkScheduleMessages = useSelector(state => state.settingsStructure.checkScheduleMessages)
   const scheduledDate = useSelector(state => state.messagingStructure.scheduledDate)
   const sendResultsArray = useSelector(state => state.messagingStructure.sendResultsArray)
+  const checkLinkShortening = useSelector(state => state.settingsStructure.checkLinkShortening)
 
   const [broadcastAlertClicked, setBroadcastAlert] = useState(false);
   const [lineTypeAlertClicked, setLineTypeAlert] = useState(false);
@@ -191,19 +192,21 @@ const CheckAndSend = () => {
 
     const processChunk = async (chunk) => {
       
+      let filteredChunkData = []
       if(sendResultsArray.length > 0){
-        const filteredChunkData = chunk.chunkData.filter(chunkItem => {
+        filteredChunkData = chunk.chunkData.filter(chunkItem => {
           const found = sendResultsArray.find(r => r.csvRowID === chunkItem.UniqueID);
           return !(found && found.status === 'delivered');
         });
       }
       
       const data = {
-        csvData: filteredChunkData,
+        csvData: filteredChunkData.length > 0 ? filteredChunkData: chunk.chunkData,
         startIndex: chunk.startIndex,
         phoneNumberColumn: phoneNumberColumn,
         ...(checkScheduleMessages ? { scheduledDate : scheduledDate, isSchedulingEnabled: true } : { isSchedulingEnabled: false}),
-        ...messagingStructure
+        ...messagingStructure,
+        isLinkShorteningEnabled: checkLinkShortening
       }
       
       updateProgressBar(chunkSize, csvData.length)

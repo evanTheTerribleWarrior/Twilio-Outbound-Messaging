@@ -11,15 +11,20 @@ Easily set up and send out messaging campaigns using your Twilio account.
 ![Application screenshot](https://github.com/evanTheTerribleWarrior/Twilio-Outbound-Messaging/assets/111442118/c436f41e-15b7-45d7-9eff-da0c53ff9911)
 
 ## Key features
- * Load data from a CSV file
+
+### Messaging features
  * Set custom messages or pre-created templates (via Twilio Content API)
  * Send messages via the standard Messaging API or Broadcast API
- * Supports multiple messaging channels
- * Add/Edit/Delete/Search data directly on the browser
+ * Messaging Features: Scheduling, Link Shortening
  * Check numbers before sending to identify malformed numbers or non-mobile numbers (via Twilio Lookup API)
+ * Supports multiple messaging channels (SMS, Whatsapp, Facebook Messenger)
+ * Get Updated Message statuses to understand the final state of messages
+
+### App features
+ * Load data from a CSV file
+ * Add/Edit/Delete/Search data directly on the browser
  * Logs
  * Basic Graphs for visualising the total message statuses and errors
- * Get Updated Message statuses to understand the final state of messages
  * JWT authentication
  * Exponential Backoff for error 429 "Too Many Requests"
  * Redux store used to save important data across the application locally

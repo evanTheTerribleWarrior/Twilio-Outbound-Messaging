@@ -1,9 +1,9 @@
 Check and Send:
 - Handle error in promises
-- Do not retry delivered
 - Put text under the Selected column if check or send are clicked and there is no column set
 
 General:
+- Message Tagging?
 
 Future:
 - Add GBM?

@@ -21,7 +21,8 @@ export const SETTINGS_TYPES = {
   SCHEDULE_SWITCH: 'scheduleSwitch',
   BROADCAST_SWITCH: 'broadcastSwitch',
   ENABLE_GRAPH: 'enableGraph',
-  LIMITS: 'limits'
+  LIMITS: 'limits',
+  LINK_SHORTENING: 'linkShorteningSwitch'
 }
 
 export const CSVDATA_TYPES = {

@@ -15,7 +15,8 @@ exports.prepareData = (event, sendType) => {
         senderTypeSelection, 
         csvData, 
         phoneNumberColumn,
-        isSchedulingEnabled
+        isSchedulingEnabled,
+        isLinkShorteningEnabled
     } = event;
     
     let sender;
@@ -75,6 +76,10 @@ exports.prepareData = (event, sendType) => {
           userObj['sendAt'] = scheduledDate;
         }
 
+        if (isLinkShorteningEnabled && sendType === "simple") {
+          userObj['shortenUrls'] =  true;
+        }
+
         Messages.push(userObj);  
     })
 
@@ -82,6 +87,10 @@ exports.prepareData = (event, sendType) => {
       const scheduledDate = event.scheduledDate
       messageData['scheduleType'] = 'fixed';
       messageData['sendAt'] = scheduledDate
+    }
+
+    if (isLinkShorteningEnabled && sendType === "broadcast") {
+      messageData['shortenUrls'] =  true;
     }
 
     return {

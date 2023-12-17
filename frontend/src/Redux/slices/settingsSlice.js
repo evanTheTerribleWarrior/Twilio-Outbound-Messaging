@@ -8,6 +8,7 @@ import { SETTINGS_TYPES, COMMON } from '../../Utils/variables';
     checkMessagingService: false,
     checkScheduleMessages: false,
     checkBroadcastAPI: false,
+    checkLinkShortening: false,
     enableGraph: false,
     limits: {
       lookupChunkSize: 50,
@@ -42,6 +43,9 @@ import { SETTINGS_TYPES, COMMON } from '../../Utils/variables';
             case SETTINGS_TYPES.BROADCAST_SWITCH:
                 state.checkBroadcastAPI = action.payload.value
                 break;
+            case SETTINGS_TYPES.LINK_SHORTENING:
+              state.checkLinkShortening = action.payload.value
+              break;
             case SETTINGS_TYPES.ENABLE_GRAPH:
                 state.enableGraph = action.payload.value
                 break;

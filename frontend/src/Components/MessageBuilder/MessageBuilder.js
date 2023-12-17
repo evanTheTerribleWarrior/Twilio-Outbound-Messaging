@@ -4,7 +4,6 @@ import TemplateOptions from './TemplateOptions/TemplateOptions';
 import ContentTemplateRenderer from './ContentTemplateRenderer/ContentTemplateRenderer';
 import ProTip from '../ProTip/ProTip';
 import MessageTypeSelection from './MessageTypeSelection/MessageTypeSelection';
-import MessageScheduler from './MessageScheduler/MessageScheduler';
 import { useSelector, useDispatch } from 'react-redux';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { updateSettingsState } from '../../Redux/slices/settingsSlice';
@@ -124,7 +123,6 @@ const MessageBuilder = () => {
             messageTypeSelection === "Template" && <TemplateOptions/>
         }
         { template && <ContentTemplateRenderer template={template}/>}
-        <MessageScheduler/>
         </FormControl>
         </>
     )
