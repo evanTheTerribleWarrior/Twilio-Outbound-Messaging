@@ -10,7 +10,17 @@ import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import { fetchTemplates } from '../../../Utils/functions';
+import { styled } from '@mui/system';
+
+const StyledMenuItem = styled(MenuItem)({
+  whiteSpace: 'normal',
+});
 
 const TemplateOptions = (props) => {
     const dispatch = useDispatch();
@@ -25,7 +35,8 @@ const TemplateOptions = (props) => {
       'twilio/call-to-action': 'Call To Action',
       'twilio/quick-reply': 'Quick Reply',
       'twilio/card': 'Card',
-      'twilio/list-picker': 'List Picker'
+      'twilio/list-picker': 'List Picker',
+      'whatsapp/authentication': 'Whatsapp Authentication'
     }
     const messageTypeSelection = useSelector(state => state.messagingStructure.messageTypeSelection)
     const channelSelection = useSelector(state => state.messagingStructure.channelSelection);
@@ -83,6 +94,23 @@ const TemplateOptions = (props) => {
       }))
     }
 
+    const menuItems = templates_array.flatMap((template, index) => [
+      <StyledMenuItem key={template.sid} value={template.sid}>
+        <Grid container spacing={2}>
+          <Grid item>
+            <Typography variant="body2"><b>Name:</b> {template.name}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2"><b>Language:</b> {template.language}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2"><b>Type:</b> {contentTypes[Object.keys(template.content)[0]]}</Typography>
+          </Grid>
+        </Grid>
+      </StyledMenuItem>,
+      index < templates_array.length - 1 && <Divider key={`divider-${template.sid}`} />
+    ]).filter(Boolean);
+
     return(
     <>
       <FormGroup>
@@ -106,13 +134,7 @@ const TemplateOptions = (props) => {
                 value={selectedTemplate}
                 onChange={(event) => {handleSelectedTemplate(event)}}
                 >
-                {templates_array.map((template,index) =>
-                  <MenuItem key={index} id={index} value={template.sid}>
-                    <b>Name</b>: {template.name}<br/>
-                    <b>{' '}Language</b>: {template.language}<br/>
-                    <b>{' '}Type</b>: {contentTypes[Object.keys(template.content)[0]]}
-                  </MenuItem>
-                )}
+                {menuItems}
                 </Select>
                 </FormControl>
               )

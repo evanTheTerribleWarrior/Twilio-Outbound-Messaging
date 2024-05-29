@@ -11,6 +11,28 @@ exports.handler = async function(context, event, callback) {
   let check = checkAuth.checkAuth(event.request.cookies, context.JWT_SECRET);
   if(!check.allowed)return callback(null,check.response);
 
+  const fetchAllTemplates = async (url, axios_auth) => {
+    let templates = [];
+    let currentUrl = url;
+  
+    try {
+      while (currentUrl) {
+        const response = await axios.get(currentUrl, axios_auth);
+        const data = response.data;
+  
+        // Add the fetched templates to the overall array
+        templates = templates.concat(data.contents);
+  
+        // Update the currentUrl to the next_page_url for the next iteration
+        currentUrl = data.meta.next_page_url;
+      }
+    } catch (error) {
+      console.error("Error fetching templates:", error);
+    }
+  
+    return templates;
+  };
+
 	try {
 
       let templates_array = [];
@@ -22,13 +44,11 @@ exports.handler = async function(context, event, callback) {
         }
       }
 
-		  const templates = await axios.get(URL, axios_auth);
-      if(templates.status !== 200){
-        throw("Could not load templates")
-      }
-      console.log(templates.data.contents)
+		  const templates = await fetchAllTemplates(URL, axios_auth);
+      console.log(templates.length)
+      //console.log(templates.data.contents)
 
-      templates.data.contents.forEach(t => {
+      templates.forEach(t => {
 
           const templateData = {
             'name': t.friendly_name + " - HX..." + t.sid.slice(-4),
