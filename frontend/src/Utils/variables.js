@@ -69,3 +69,13 @@ export const ACTION_TYPES = {
 export const COMMON = {
   RESET_STATE: 'resetState'
 }
+
+export const CONTENT_TYPES = {
+  'twilio/text': 'Text',
+  'twilio/media': 'Media',
+  'twilio/call-to-action': 'Call To Action',
+  'twilio/quick-reply': 'Quick Reply',
+  'twilio/card': 'Card',
+  'twilio/list-picker': 'List Picker',
+  'whatsapp/authentication': 'Whatsapp Authentication'
+};

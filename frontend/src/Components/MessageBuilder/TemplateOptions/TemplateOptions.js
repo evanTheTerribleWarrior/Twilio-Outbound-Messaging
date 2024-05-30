@@ -16,6 +16,7 @@ import Menu from '@mui/material/Menu';
 import { fetchTemplates } from '../../../Utils/functions';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
+import { CONTENT_TYPES } from '../../../Utils/variables';
 
 const StyledMenuItem = styled(MenuItem)({
   whiteSpace: 'normal',
@@ -36,15 +37,6 @@ const TemplateOptions = (props) => {
   const [showLoadingMoreIcon, setShowLoadingMoreIcon] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const contentTypes = {
-    'twilio/text': 'Text',
-    'twilio/media': 'Media',
-    'twilio/call-to-action': 'Call To Action',
-    'twilio/quick-reply': 'Quick Reply',
-    'twilio/card': 'Card',
-    'twilio/list-picker': 'List Picker',
-    'whatsapp/authentication': 'Whatsapp Authentication'
-  };
 
   const messageTypeSelection = useSelector(state => state.messagingStructure.messageTypeSelection);
   const channelSelection = useSelector(state => state.messagingStructure.channelSelection);
@@ -123,7 +115,7 @@ const TemplateOptions = (props) => {
           <Typography variant="body2"><b>Language:</b> {template.language}</Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body2"><b>Type:</b> {contentTypes[Object.keys(template.content)[0]]}</Typography>
+          <Typography variant="body2"><b>Type:</b> {CONTENT_TYPES[Object.keys(template.content)[0]]}</Typography>
         </Grid>
       </Grid>
     </StyledMenuItem>,
