@@ -1,6 +1,7 @@
 Check and Send:
 - Handle error in promises
 - Put text under the Selected column if check or send are clicked and there is no column set
+- Add more template type rendering
 
 General:
 - Message Tagging?

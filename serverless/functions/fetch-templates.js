@@ -13,6 +13,8 @@ exports.handler = async function(context, event, callback) {
 
   const fetchTemplates = async (url, axios_auth) => {
     let templates = [];
+
+    if(!url || url.length === 0) url = URL;
   
     try {
         const response = await axios.get(url, axios_auth);

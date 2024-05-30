@@ -30,7 +30,7 @@ const LoadMoreMenuItem = styled(MenuItem)({
 const TemplateOptions = (props) => {
   const dispatch = useDispatch();
   const [templatesArray, setTemplatesArray] = useState([]);
-  const [nextPageUrl, setNextPageUrl] = useState("https://content.twilio.com/v1/Content");
+  const [nextPageUrl, setNextPageUrl] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [showLoadingIcon, setShowLoadingIcon] = useState(false);
   const [showLoadingMoreIcon, setShowLoadingMoreIcon] = useState(false);
@@ -51,7 +51,7 @@ const TemplateOptions = (props) => {
 
   useEffect(() => {
     if (messageTypeSelection === "Template") {
-      fetchPaginatedTemplates(nextPageUrl);
+      fetchPaginatedTemplates(nextPageUrl, true);
     } else {
       cleanValues();
     }
@@ -67,8 +67,8 @@ const TemplateOptions = (props) => {
     handleClose();
   };
 
-  const fetchPaginatedTemplates = async (url, keepOpen = false, isLoadMore = false) => {
-    if (!url) return;
+  const fetchPaginatedTemplates = async (url, isInitialFetch = false, keepOpen = false, isLoadMore = false) => {
+    if (!url && !isInitialFetch) return;
     if (isLoadMore) {
       setShowLoadingMoreIcon(true);
     } else {
@@ -91,7 +91,7 @@ const TemplateOptions = (props) => {
 
   const handleLoadMore = (event) => {
     event.stopPropagation();
-    fetchPaginatedTemplates(nextPageUrl, true, true);
+    fetchPaginatedTemplates(nextPageUrl, false, true, true);
   };
 
   const handleOpen = (event) => {
