@@ -1,11 +1,11 @@
 import { API_URLS } from "./variables";
 
-export async function fetchTemplates (channelSelection) {
+export async function fetchTemplates (channelSelection, nextPageUrl) {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.FETCH_TEMPLATES    
     const response = await fetch(url, {
         method: 'POST',
-        body: JSON.stringify({channelSelection: channelSelection}),
+        body: JSON.stringify({channelSelection: channelSelection, nextPageUrl: nextPageUrl}),
         headers: {
           'Content-Type': 'application/json'          
         },
