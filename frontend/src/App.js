@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from '@mui/material';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import MainAppBar from './Components/MainAppBar/MainAppBar';
@@ -17,9 +17,9 @@ const App = () => {
         height: "100vh", }}>
         <Routes>
             <Route exact path="/build" element={<Auth><MainBuilder/></Auth>} />
-            <Route exact path="/" element={<Login />} />
+            <Route exact path="/" element={<Auth><Navigate to="/build" /></Auth>} />
             <Route exact path="/login" element={<Login />} />
-            <Route exact path="/index.html" element={<Login />} />
+            <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         </Container>
     </Provider>

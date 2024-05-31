@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from "react-router-dom";
-import { loginSuccess } from '../../../Redux/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Navigate } from "react-router-dom";
+import { setAuthenticated } from '../../../Redux/slices/authSlice';
 import { authenticateUser } from '../../../Utils/functions';
 import { Typography, TextField, Button, Container } from '@mui/material';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +21,7 @@ const Login = () => {
       }
     )
     if(data.success){
-      dispatch(loginSuccess(true))
+      dispatch(setAuthenticated(true))
       setAuthFailMessage(null)
       navigate("/build", { replace: true })
     }
@@ -46,6 +47,8 @@ const Login = () => {
     justifyContent: 'center',
     alignItems: 'center',
   };
+
+  if(isAuthenticated) return <Navigate to="/build"/>;
   return (
     <div style={containerStyles}>
       <div style={centerStyles}>

@@ -8,14 +8,14 @@ import {createSlice} from '@reduxjs/toolkit'
     name: 'auth',
     initialState,
     reducers: {
-      loginSuccess: (state, action) => {
-        state.isAuthenticated = true
-      },
       logout: (state) => {
         state.isAuthenticated = false;
       },
+      setAuthenticated(state, action) {
+        state.isAuthenticated = action.payload;
+      }
     },
   });
   
-  export const { loginSuccess, logout } = authSlice.actions;
+  export const { logout, setAuthenticated } = authSlice.actions;
   export default authSlice.reducer;

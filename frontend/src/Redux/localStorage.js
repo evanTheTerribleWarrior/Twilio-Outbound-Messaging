@@ -15,5 +15,6 @@ export const loadState = () => {
       const serializedState = JSON.stringify(state);
       localStorage.setItem('outbound_messaging_app_state', serializedState);
     } catch (err) {
+      console.error("Could not save state", err);
     }
   };
