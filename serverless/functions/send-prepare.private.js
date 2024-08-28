@@ -78,7 +78,6 @@ exports.prepareData = (event, sendType) => {
         if (isLinkShorteningEnabled && sendType === "simple") {
           userObj['shortenUrls'] =  true;
         }
-
         Messages.push(userObj);  
     })
 
@@ -123,5 +122,5 @@ const buildContentVariables = (templateVariables, csvRow) => {
         }
     }
   
-    return contentVariables;
+    return JSON.stringify(contentVariables);
   };
